@@ -10,8 +10,9 @@
 import unittest
 from sdvs.decoder import Decoder, Instruction
 
+
 class TestDecoder(unittest.TestCase):
 
     def setUp(self):
-        self.bitInstructions = [""]
-        self.decoder = Decoder()
+        self.bit_instructions = [0x8080901c]
+        self.decoder = Decoder(self.bit_instructions)
