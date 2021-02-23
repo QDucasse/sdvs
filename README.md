@@ -1,9 +1,9 @@
 # sdvs
 
-[![Pipeline][pipeline-badge]][pipeline-link]
+<!-- [![Pipeline][pipeline-badge]][pipeline-link]
 [![Coverage][coverage-badge]][coverage-link]
 [![Documentation][documentation-badge]][documentation-link]
-[![PyPI][pypi-badge]][pypi-link]
+[![PyPI][pypi-badge]][pypi-link] -->
 
 [pipeline-badge]: https://github.com/QDucasse/sdvs/badges/master/pipeline.svg
 [pipeline-link]: https://github.com/QDucasse/sdvs/pipelines
@@ -16,32 +16,28 @@
 
 ## Features
 
+## Objectives
+
 ## Technical requirements
 
 Below is the list of currently supported Python releases:
 
 | # | Python |
 |---|--------|
-| 1 | 3.6    |
-| 2 | 3.7    |
-| 3 | 3.8    |
+| 1 | 3.7    |
+| 2 | 3.8    |
+| 3 | 3.9    |
 
 ## Code and contribution
 
-The code is open source and released under the [MIT License (MIT)][mit-license]. It is available on [Gitlab][gitlab] and follows the guidelines about [Semantic Versioning][semver] for transparency within the release cycle and backward compatibility whenever possible.
+The code is open source and released under the [MIT License (MIT)][mit-license]. It is available on [Github][gitlab] and follows the guidelines about [Semantic Versioning][semver] for transparency within the release cycle and backward compatibility whenever possible.
 
 All contributions are welcome, whether bug reports, code contributions and reviews, documentation or feature requests.
 
 [mit-license]: https://en.wikipedia.org/wiki/MIT_License
-[gitlab]: https://github.com/QDucasse/sdvs
+[github]: https://github.com/QDucasse/sdvs
 [semver]: http://semver.org/
 
 ## Installation
-
-Install `sdvs` using pip:
-
-```bash
-pip install sdvs
-```
 
 ## Usage
