@@ -6,6 +6,10 @@
 # ===========================================
 # Constants and codes used in the project
 
+# Register constants
+REG_NUMBER = 16
+REG_SIZE = 32
+
 # Op codes
 OP_ADD = 0b0000
 OP_SUB = 0b0001
