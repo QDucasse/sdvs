@@ -25,6 +25,17 @@ class Instruction:
         self.addr = 0
         self.type = 0
 
+    def __eq__(self, other):
+        return (self.op_code == other.op_code and
+                self.cfg_mask == other.cfg_mask and
+                self.rd == other.rd and
+                self.ra == other.ra and
+                self.rb == other.rb and
+                self.imma == other.imma and
+                self.immb == other.immb and
+                self.addr == other.addr and
+                self.type == other.type)
+
 
 class Decoder:
     """
@@ -33,6 +44,7 @@ class Decoder:
 
     def __init__(self, bit_instructions):
         self.bit_instructions = bit_instructions
+        self.current_instruction = 0
 
     def decode(self, bitInstruction):
         op_code = (bitInstruction & 0xF0000000) >> 28  # 1111 0000 0000 0000 0000 0000 0000 0000
@@ -67,6 +79,6 @@ class Decoder:
         Create a generator out of the 32-bits instructions list and decode it when needed.
         :return: next instruction to be decoded
         """
-        instructions = (self.decode(bitInstruction) for bitInstruction in self.bit_instructions)
-        for instruction in instructions:
-            yield instruction
+        decoded_instruction = self.decode(self.bit_instructions[self.current_instruction])
+        self.current_instruction += 1
+        return decoded_instruction
