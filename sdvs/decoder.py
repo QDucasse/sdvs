@@ -6,7 +6,7 @@
 # ===========================================
 # Decoder: Process 32-bits instruction into their corresponding instruction object.
 
-from constants import *
+from sdvs.constants import *
 
 
 class Instruction:

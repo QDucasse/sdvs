@@ -6,8 +6,8 @@
 # ===========================================
 # Simulator: Process instructions one by one and show the results of their execution
 
-from decoder import Instruction
-from constants import *
+from sdvs.decoder import Instruction
+from sdvs.constants import *
 
 
 class Register:
