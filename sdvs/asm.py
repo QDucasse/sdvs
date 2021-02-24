@@ -68,6 +68,8 @@ def determine_type(string):
         return VAL_INT
     elif string.endswith("state"):
         return VAL_STATE
+    else:
+        raise ConfigException("No type found in instruction")
 
 
 class ConfigException(Exception):
@@ -88,9 +90,11 @@ class ASM:
         instructions = []
         with open(file_name, "r") as file:
             content = file.readlines()
+        content = [line.strip() for line in content]
+        content = [line for line in content if line]
         for line in content:
             instructions.append(self.process_line(line))
-
+        return instructions
 
     def process_line(self, line):
         """
@@ -102,7 +106,7 @@ class ASM:
         op = arguments[0]
         op_code, process_function = ASM.OP_CODES[op]
         bit_instruction = op_code << 28
-        bit_instruction = process_function(arguments, bit_instruction)
+        bit_instruction = process_function(self, arguments, bit_instruction)
         return bit_instruction
 
     def process_binary(self, arguments, bit_instruction):
@@ -170,9 +174,8 @@ class ASM:
             raise ConfigException("MOV operation should hold rd and an argument")
         else:
             op, rd, lh = arguments
-        # Process config and type
+        # Process config
         bit_instruction |= determine_mov_cfg(lh) << 26
-        bit_instruction |= determine_type(op) << 24
         # Expect the first argument to be a register (rd)
         expect_reg(rd, "First argument in MOV operation should be a destination register")
         bit_instruction |= extract_number(rd) << 20
