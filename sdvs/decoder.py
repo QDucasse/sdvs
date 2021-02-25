@@ -63,6 +63,12 @@ class Decoder:
         self.current_instruction = 0
 
     def decode(self, bitInstruction):
+        """
+        Process the bit instruction with several bit-masks and fills an
+        Instruction object.
+        :param bitInstruction: 32-bits instruction to decode
+        :return: filled instruction object
+        """
         op_code = (bitInstruction & 0xF0000000) >> 28  # 1111 0000 0000 0000 0000 0000 0000 0000
         instruction = Instruction(op_code)
         if op_code == OP_NOT:

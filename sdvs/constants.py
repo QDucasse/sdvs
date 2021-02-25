@@ -42,9 +42,14 @@ LOAD_RAA = 0b11
 STORE_ADR = 0b00
 STORE_RAA = 0b01
 
-# Types configs
+# Type configs
 VAL_BOOL = 0b00
 VAL_BYTE = 0b01
 VAL_INT = 0b10
 VAL_STATE = 0b11
 
+# Type sizes
+SIZE_BOOL = 8
+SIZE_BYTE = 8
+SIZE_INT = 32
+SIZE_STATE = 16
