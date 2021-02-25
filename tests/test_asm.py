@@ -13,30 +13,30 @@ from sdvs.asm import *
 from sdvs.constants import *
 
 mock_file = """
-add r0 r1 r2
-sub r0 r1 122
-mod r0 122 r2
-eq r0 123 124
-not r0 r1
-jmp r0 2567
-mov r0 r1
-mov r0 255566
-loadbool r0 r1
-loadbool r0 255566
-loadbyte r0 r1
-loadbyte r0 255566
-loadint r0 r1
-loadint r0 255566
-loadstate r0 r1
-loadstate r0 255566
-storebool r0 r1
-storebool r0 255566
-storebyte r0 r1
-storebyte r0 255566
-storeint r0 r1
-storeint r0 255566
-storestate r0 r1
-storestate r0 255566
+add r3 r1 r2
+sub r3 r1 122
+mod r3 122 r2
+eq r3 123 124
+not r3 r1
+jmp r3 234
+mov r3 r1
+mov r3 234
+loadbool r3 r1
+loadbool r3 234
+loadbyte r3 r1
+loadbyte r3 234
+loadint r3 r1
+loadint r3 234
+loadstate r3 r1
+loadstate r3 234
+storebool r3 r1
+storebool r3 234
+storebyte r3 r1
+storebyte r3 234
+storeint r3 r1
+storeint r3 234
+storestate r3 r1
+storestate r3 234
 """
 
 
@@ -60,7 +60,7 @@ class TestASM(unittest.TestCase):
         self.assertEqual(CFG_RR, determine_bin_cfg("r3", "r10"))
         self.assertEqual(CFG_RI, determine_bin_cfg("r3", "14578"))
         self.assertEqual(CFG_IR, determine_bin_cfg("323", "r10"))
-        self.assertEqual(CFG_II, determine_bin_cfg("113", "225678"))
+        self.assertEqual(CFG_II, determine_bin_cfg("113", "22348"))
 
     def test_determine_load_cfg(self):
         self.assertEqual(LOAD_RAA, determine_load_cfg("r4"))
@@ -86,139 +86,139 @@ class TestASM(unittest.TestCase):
 
     def test_process_binary(self):
         # Config Register Register
-        arguments1 = ["add", "r0", "r1", "r2"]
+        arguments1 = ["add", "r3", "r1", "r2"]
         bit_instruction1 = OP_ADD << 28
-        self.assertEqual(0x00000802, self.asm.process_binary(arguments1, bit_instruction1))
+        self.assertEqual(0x00c00802, self.asm.process_binary(arguments1, bit_instruction1))
         # Config Register Immediate
-        arguments2 = ["sub", "r0", "r1", "122"]
+        arguments2 = ["sub", "r3", "r1", "122"]
         bit_instruction2 = OP_SUB << 28
-        self.assertEqual(0x1400087a, self.asm.process_binary(arguments2, bit_instruction2))
+        self.assertEqual(0x14c0087a, self.asm.process_binary(arguments2, bit_instruction2))
         # Config Immediate Register
-        arguments3 = ["mod", "r0", "122", "r2"]
+        arguments3 = ["mod", "r3", "122", "r2"]
         bit_instruction3 = OP_MOD << 28
-        self.assertEqual(0x4803d002, self.asm.process_binary(arguments3, bit_instruction3))
+        self.assertEqual(0x48c3d002, self.asm.process_binary(arguments3, bit_instruction3))
         # Config Immediate Immediate
-        arguments4 = ["eq", "r0", "123", "124"]
+        arguments4 = ["eq", "r3", "123", "124"]
         bit_instruction4 = OP_EQ << 28
-        self.assertEqual(0x9c03d87c, self.asm.process_binary(arguments4, bit_instruction4))
+        self.assertEqual(0x9cc3d87c, self.asm.process_binary(arguments4, bit_instruction4))
 
     def test_process_not(self):
-        arguments = ["not", "r0", "r1"]
+        arguments = ["not", "r3", "r1"]
         bit_instruction = OP_NOT << 28
-        self.assertEqual(0xa0000001, self.asm.process_not(arguments, bit_instruction))
+        self.assertEqual(0xa3000001, self.asm.process_not(arguments, bit_instruction))
 
     def test_process_jmp(self):
-        arguments = ["jmp", "r0", "2567"]
+        arguments = ["jmp", "r3", "234"]
         bit_instruction = OP_JMP << 28
-        self.assertEqual(0xb0000a07, self.asm.process_jmp(arguments, bit_instruction))
+        self.assertEqual(0xb30000ea, self.asm.process_jmp(arguments, bit_instruction))
 
     def test_process_mov(self):
         # Config LOAD_REG
-        arguments1 = ["mov", "r0", "r1"]
+        arguments1 = ["mov", "r3", "r1"]
         bit_instruction1 = OP_LOAD << 28
-        self.assertEqual(0xd0000001, self.asm.process_mov(arguments1, bit_instruction1))
+        self.assertEqual(0xd0300001, self.asm.process_mov(arguments1, bit_instruction1))
         # Config LOAD_IMM
-        arguments2 = ["mov", "r0", "255566"]
+        arguments2 = ["mov", "r3", "234"]
         bit_instruction2 = OP_LOAD << 28
-        self.assertEqual(0xd403e64e, self.asm.process_mov(arguments2, bit_instruction2))
+        self.assertEqual(0xd43000ea, self.asm.process_mov(arguments2, bit_instruction2))
 
     def test_process_load(self):
         # Config LOAD_RAA - bool
-        arguments1 = ["loadbool", "r0", "r1"]
+        arguments1 = ["loadbool", "r3", "r1"]
         bit_instruction1 = OP_LOAD << 28
-        self.assertEqual(0xdc000001, self.asm.process_load(arguments1, bit_instruction1))
+        self.assertEqual(0xdc300001, self.asm.process_load(arguments1, bit_instruction1))
         # Config LOAD_ADR - bool
-        arguments2 = ["loadbool", "r0", "255566"]
+        arguments2 = ["loadbool", "r3", "234"]
         bit_instruction2 = OP_LOAD << 28
-        self.assertEqual(0xd803e64e, self.asm.process_load(arguments2, bit_instruction2))
+        self.assertEqual(0xd83000ea, self.asm.process_load(arguments2, bit_instruction2))
         # Config LOAD_RAA - byte
-        arguments1 = ["loadbyte", "r0", "r1"]
+        arguments1 = ["loadbyte", "r3", "r1"]
         bit_instruction1 = OP_LOAD << 28
-        self.assertEqual(0xdd000001, self.asm.process_load(arguments1, bit_instruction1))
+        self.assertEqual(0xdd300001, self.asm.process_load(arguments1, bit_instruction1))
         # Config LOAD_ADR - byte
-        arguments2 = ["loadbyte", "r0", "255566"]
+        arguments2 = ["loadbyte", "r3", "234"]
         bit_instruction2 = OP_LOAD << 28
-        self.assertEqual(0xd903e64e, self.asm.process_load(arguments2, bit_instruction2))
+        self.assertEqual(0xd93000ea, self.asm.process_load(arguments2, bit_instruction2))
         # Config LOAD_RAA - int
-        arguments1 = ["loadint", "r0", "r1"]
+        arguments1 = ["loadint", "r3", "r1"]
         bit_instruction1 = OP_LOAD << 28
-        self.assertEqual(0xde000001, self.asm.process_load(arguments1, bit_instruction1))
+        self.assertEqual(0xde300001, self.asm.process_load(arguments1, bit_instruction1))
         # Config LOAD_ADR - int
-        arguments2 = ["loadint", "r0", "255566"]
+        arguments2 = ["loadint", "r3", "234"]
         bit_instruction2 = OP_LOAD << 28
-        self.assertEqual(0xda03e64e, self.asm.process_load(arguments2, bit_instruction2))
+        self.assertEqual(0xda3000ea, self.asm.process_load(arguments2, bit_instruction2))
         # Config LOAD_RAA - state
-        arguments1 = ["loadstate", "r0", "r1"]
+        arguments1 = ["loadstate", "r3", "r1"]
         bit_instruction1 = OP_LOAD << 28
-        self.assertEqual(0xdf000001, self.asm.process_load(arguments1, bit_instruction1))
+        self.assertEqual(0xdf300001, self.asm.process_load(arguments1, bit_instruction1))
         # Config LOAD_ADR - state
-        arguments2 = ["loadstate", "r0", "255566"]
+        arguments2 = ["loadstate", "r3", "234"]
         bit_instruction2 = OP_LOAD << 28
-        self.assertEqual(0xdb03e64e, self.asm.process_load(arguments2, bit_instruction2))
+        self.assertEqual(0xdb3000ea, self.asm.process_load(arguments2, bit_instruction2))
 
     def test_process_store(self):
         # Config STORE_RAA - bool
-        arguments1 = ["storebool", "r0", "r1"]
+        arguments1 = ["storebool", "r3", "r1"]
         bit_instruction1 = OP_STORE << 28
-        self.assertEqual(0xc4000001, self.asm.process_store(arguments1, bit_instruction1))
+        self.assertEqual(0xc4300001, self.asm.process_store(arguments1, bit_instruction1))
         # Config STORE_ADR - bool
-        arguments2 = ["storebool", "r0", "255566"]
+        arguments2 = ["storebool", "r3", "234"]
         bit_instruction2 = OP_STORE << 28
-        self.assertEqual(0xc003e64e, self.asm.process_store(arguments2, bit_instruction2))
+        self.assertEqual(0xc03000ea, self.asm.process_store(arguments2, bit_instruction2))
         # Config STORE_RAA - byte
-        arguments1 = ["storebyte", "r0", "r1"]
+        arguments1 = ["storebyte", "r3", "r1"]
         bit_instruction1 = OP_STORE << 28
-        self.assertEqual(0xc5000001, self.asm.process_store(arguments1, bit_instruction1))
+        self.assertEqual(0xc5300001, self.asm.process_store(arguments1, bit_instruction1))
         # Config STORE_ADR - byte
-        arguments2 = ["storebyte", "r0", "255566"]
+        arguments2 = ["storebyte", "r3", "234"]
         bit_instruction2 = OP_STORE << 28
-        self.assertEqual(0xc103e64e, self.asm.process_store(arguments2, bit_instruction2))
+        self.assertEqual(0xc13000ea, self.asm.process_store(arguments2, bit_instruction2))
         # Config STORE_RAA - int
-        arguments1 = ["storeint", "r0", "r1"]
+        arguments1 = ["storeint", "r3", "r1"]
         bit_instruction1 = OP_STORE << 28
-        self.assertEqual(0xc6000001, self.asm.process_store(arguments1, bit_instruction1))
+        self.assertEqual(0xc6300001, self.asm.process_store(arguments1, bit_instruction1))
         # Config STORE_ADR - int
-        arguments2 = ["storeint", "r0", "255566"]
+        arguments2 = ["storeint", "r3", "234"]
         bit_instruction2 = OP_STORE << 28
-        self.assertEqual(0xc203e64e, self.asm.process_store(arguments2, bit_instruction2))
+        self.assertEqual(0xc23000ea, self.asm.process_store(arguments2, bit_instruction2))
         # Config STORE_RAA - state
-        arguments1 = ["storestate", "r0", "r1"]
+        arguments1 = ["storestate", "r3", "r1"]
         bit_instruction1 = OP_STORE << 28
-        self.assertEqual(0xc7000001, self.asm.process_store(arguments1, bit_instruction1))
+        self.assertEqual(0xc7300001, self.asm.process_store(arguments1, bit_instruction1))
         # Config STORE_ADR - state
-        arguments2 = ["storestate", "r0", "255566"]
+        arguments2 = ["storestate", "r3", "234"]
         bit_instruction2 = OP_STORE << 28
-        self.assertEqual(0xc303e64e, self.asm.process_store(arguments2, bit_instruction2))
+        self.assertEqual(0xc33000ea, self.asm.process_store(arguments2, bit_instruction2))
 
     def test_process_line(self):
-        self.assertEqual(0x00000802, self.asm.process_line("add r0 r1 r2"))
+        self.assertEqual(0x00c00802, self.asm.process_line("add r3 r1 r2"))
 
     @patch('builtins.open', mock_open(read_data=mock_file))
     def test_process_file(self):
         expected_instructions = [
-            0x00000802,  # add r0 r1 r2
-            0x1400087a,  # sub r0 r1 122
-            0x4803d002,  # mod r0 122 r2
-            0x9c03d87c,  # eq r0 123 124
-            0xa0000001,  # not r0 r1
-            0xb0000a07,  # jmp r0 2567
-            0xd0000001,  # mov r0 r1
-            0xd403e64e,  # mov r0 255566
-            0xdc000001,  # loadbool r0 r1
-            0xd803e64e,  # loadbool r0 255566
-            0xdd000001,  # loadbyte r0 r1
-            0xd903e64e,  # loadbyte r0 255566
-            0xde000001,  # loadint r0 r1
-            0xda03e64e,  # loadint r0 255566
-            0xdf000001,  # loadstate r0 r1
-            0xdb03e64e,  # loadstate r0 255566
-            0xc4000001,  # storebool r0 r1
-            0xc003e64e,  # storebool r0 255566
-            0xc5000001,  # storebyte r0 r1
-            0xc103e64e,  # storebyte r0 255566
-            0xc6000001,  # storeint r0 r1
-            0xc203e64e,  # storeint r0 255566
-            0xc7000001,  # storestate r0 r1
-            0xc303e64e   # storestate r0 255566
+            0x00c00802,  # add r3 r1 r2
+            0x14c0087a,  # sub r3 r1 122
+            0x48c3d002,  # mod r3 122 r2
+            0x9cc3d87c,  # eq r3 123 124
+            0xa3000001,  # not r3 r1
+            0xb30000ea,  # jmp r3 234
+            0xd0300001,  # mov r3 r1
+            0xd43000ea,  # mov r3 234
+            0xdc300001,  # loadbool r3 r1
+            0xd83000ea,  # loadbool r3 234
+            0xdd300001,  # loadbyte r3 r1
+            0xd93000ea,  # loadbyte r3 234
+            0xde300001,  # loadint r3 r1
+            0xda3000ea,  # loadint r3 234
+            0xdf300001,  # loadstate r3 r1
+            0xdb3000ea,  # loadstate r3 234
+            0xc4300001,  # storebool r3 r1
+            0xc03000ea,  # storebool r3 234
+            0xc5300001,  # storebyte r3 r1
+            0xc13000ea,  # storebyte r3 234
+            0xc6300001,  # storeint r3 r1
+            0xc23000ea,  # storeint r3 234
+            0xc7300001,  # storestate r3 r1
+            0xc33000ea   # storestate r3 234
         ]
         self.assertEqual(expected_instructions, self.asm.process_file("path/to/mock/file"))
