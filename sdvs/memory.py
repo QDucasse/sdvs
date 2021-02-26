@@ -22,7 +22,14 @@ class Memory:
         self.raw_memory = raw_memory
         self.size = size
 
-    def set_bits(self, value, address, type_size):
+    def set_bits(self, value, address, data_type):
+        """
+        Replace bits in the memory with the given value.
+        :param value: value to add
+        :param address: address of the changed value
+        :param data_type: type of the value
+        """
+        type_size = TYPES_TO_SIZE[data_type]
         all_ones = gen_bin_number_ones(self.size - (address + type_size))
         left = all_ones << (address + type_size)  # Set all the bits in the left of address + type size
         right = ((1 << address) - 1)              # Set all the bits in the right of address
@@ -47,16 +54,16 @@ class Memory:
         return self.RETRIEVE_TYPE[data_type](self, address)
 
     def set_bool_at_address(self, bool_value, address):
-        self.set_bits(bool_value, address, SIZE_BOOL)
+        self.set_bits(bool_value, address, VAL_BOOL)
 
     def set_byte_at_address(self, byte_value, address):
-        self.set_bits(byte_value, address, SIZE_BYTE)
+        self.set_bits(byte_value, address, VAL_BYTE)
 
     def set_int_at_address(self, int_value, address):
-        self.set_bits(int_value, address, SIZE_INT)
+        self.set_bits(int_value, address, VAL_INT)
 
     def set_state_at_address(self, state_value, address):
-        self.set_bits(state_value, address, SIZE_STATE)
+        self.set_bits(state_value, address, VAL_STATE)
 
     def set_at_address(self, data_type, value, address):
         self.SET_TYPE[data_type](self, value, address)

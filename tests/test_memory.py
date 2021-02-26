@@ -8,7 +8,6 @@
 # Test file!
 
 import unittest
-from sdvs.constants import *
 from sdvs.memory import *
 
 

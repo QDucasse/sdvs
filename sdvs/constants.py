@@ -53,3 +53,11 @@ SIZE_BOOL = 8
 SIZE_BYTE = 8
 SIZE_INT = 32
 SIZE_STATE = 16
+
+# Link types to their corresponding sizes
+TYPES_TO_SIZE = {
+    VAL_BOOL: SIZE_BOOL,
+    VAL_BYTE: SIZE_BYTE,
+    VAL_INT: SIZE_INT,
+    VAL_STATE: SIZE_STATE
+}

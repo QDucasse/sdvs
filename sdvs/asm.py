@@ -8,6 +8,7 @@
 
 from sdvs.constants import *
 
+
 # Helper functions
 def is_reg(string):
     return string.startswith("r")
@@ -203,7 +204,7 @@ class ASM:
         bit_instruction |= extract_number(lh)
         return bit_instruction
 
-    def process_store(self,arguments, bit_instruction):
+    def process_store(self, arguments, bit_instruction):
         """
         Process STORE operation.
         ex: store r4 256
