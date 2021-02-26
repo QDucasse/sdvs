@@ -16,14 +16,20 @@ def gen_bin_number_ones(width):
     return res
 
 
-def gen_bin_number_zeros(width):
-    return ~(gen_bin_number_ones(width))
-
-
 class Memory:
 
-    def __init__(self):
-        self.raw_memory = 0b0
+    def __init__(self, size=0, raw_memory=0b0):
+        self.raw_memory = raw_memory
+        self.size = size
+
+    def set_bits(self, value, address, type_size):
+        all_ones = gen_bin_number_ones(self.size - (address + type_size))
+        left = all_ones << (address + type_size)  # Set all the bits in the left of address + type size
+        right = ((1 << address) - 1)              # Set all the bits in the right of address
+        mask = left | right                       # Bitwise or to mask get all bits set except in the range
+        masked_memory = self.raw_memory & mask    # Clear bits from address and for the type size
+        value_shifted = value << address          # Move the value in the cleared position
+        self.raw_memory = masked_memory | value_shifted
 
     def retrieve_bool_at_address(self, address):
         return (self.raw_memory & (gen_bin_number_ones(SIZE_BOOL) << address)) >> address
@@ -41,20 +47,16 @@ class Memory:
         return self.RETRIEVE_TYPE[data_type](self, address)
 
     def set_bool_at_address(self, bool_value, address):
-        self.raw_memory |= (gen_bin_number_zeros(SIZE_BOOL) << address)
-        self.raw_memory |= (bool_value << address)
+        self.set_bits(bool_value, address, SIZE_BOOL)
 
     def set_byte_at_address(self, byte_value, address):
-        self.raw_memory |= (gen_bin_number_zeros(SIZE_BYTE) << address)
-        self.raw_memory |= (byte_value << address)
+        self.set_bits(byte_value, address, SIZE_BYTE)
 
     def set_int_at_address(self, int_value, address):
-        self.raw_memory |= (gen_bin_number_zeros(SIZE_INT) << address)
-        self.raw_memory |= (int_value << address)
+        self.set_bits(int_value, address, SIZE_INT)
 
     def set_state_at_address(self, state_value, address):
-        self.raw_memory |= (gen_bin_number_zeros(SIZE_STATE) << address)
-        self.raw_memory |= (state_value << address)
+        self.set_bits(state_value, address, SIZE_STATE)
 
     def set_at_address(self, data_type, value, address):
         self.SET_TYPE[data_type](self, value, address)
