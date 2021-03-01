@@ -60,7 +60,7 @@ class Decoder:
 
     def __init__(self, bit_instructions):
         self.bit_instructions = bit_instructions
-        self.current_instruction = 0
+        self.next_instruction_index = 0
 
     def decode(self, bitInstruction):
         """
@@ -127,6 +127,6 @@ class Decoder:
         Create a generator out of the 32-bits instructions list and decode it when needed.
         :return: next instruction to be decoded
         """
-        decoded_instruction = self.decode(self.bit_instructions[self.current_instruction])
-        self.current_instruction += 1
+        decoded_instruction = self.decode(self.bit_instructions[self.next_instruction_index])
+        self.next_instruction_index += 1
         return decoded_instruction

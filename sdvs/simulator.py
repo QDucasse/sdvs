@@ -61,13 +61,13 @@ class Simulator:
             right_operand = self.retrieve_register_value(self.current_instruction.rb)
         elif self.current_instruction.cfg_mask == CFG_RI:
             left_operand = self.retrieve_register_value(self.current_instruction.ra)
-            right_operand = self.retrieve_register_value(self.current_instruction.immb)
+            right_operand = self.current_instruction.immb
         elif self.current_instruction.cfg_mask == CFG_IR:
-            left_operand = self.retrieve_register_value(self.current_instruction.imma)
+            left_operand = self.current_instruction.imma
             right_operand = self.retrieve_register_value(self.current_instruction.rb)
         elif self.current_instruction.cfg_mask == CFG_II:
-            left_operand = self.retrieve_register_value(self.current_instruction.imma)
-            right_operand = self.retrieve_register_value(self.current_instruction.immb)
+            left_operand = self.current_instruction.imma
+            right_operand = self.current_instruction.immb
         return left_operand, right_operand
 
     def process_add(self):
@@ -174,7 +174,7 @@ class Simulator:
         condition in rd is true
         """
         if self.retrieve_register_value(self.current_instruction.rd):
-            self.decoder.current_instruction = self.current_instruction.address
+            self.decoder.next_instruction_index = self.current_instruction.addr / INSTRUCTION_SIZE
 
     def process_store(self):
         """
@@ -218,8 +218,7 @@ class Simulator:
                                        self.retrieve_register_value(self.current_instruction.ra))
 
         elif self.current_instruction.cfg_mask == LOAD_IMM:
-            self.assign_register_value(self.current_instruction.rd,
-                                       self.retrieve_register_value(self.current_instruction.imma))
+            self.assign_register_value(self.current_instruction.rd, self.current_instruction.imma)
 
     PROCESS_FUNCTIONS = {
         OP_ADD: process_add,

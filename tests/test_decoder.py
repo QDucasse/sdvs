@@ -53,11 +53,11 @@ class TestDecoder(unittest.TestCase):
         # add r3 r1 r2
         expected_instruction_add = Instruction(OP_ADD, rd=3, ra=1, rb=2, cfg_mask=CFG_RR)
         self.assertEqual(expected_instruction_add, self.decoder.decode_next())
-        self.assertEqual(1, self.decoder.current_instruction)
+        self.assertEqual(1, self.decoder.next_instruction_index)
         # sub r3 r1 122
         expected_instruction_sub = Instruction(OP_SUB, rd=3, ra=1, immb=122, cfg_mask=CFG_RI)
         self.assertEqual(expected_instruction_sub, self.decoder.decode_next())
-        self.assertEqual(2, self.decoder.current_instruction)
+        self.assertEqual(2, self.decoder.next_instruction_index)
 
     def test_decode_bin_RR(self):
         # add r3 r1 r2

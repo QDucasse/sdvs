@@ -6,6 +6,9 @@
 # ===========================================
 # Constants and codes used in the project
 
+# Instruction constants
+INSTRUCTION_SIZE = 4
+
 # Register constants
 REG_NUMBER = 16
 REG_SIZE = 32
