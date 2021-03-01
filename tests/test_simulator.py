@@ -11,8 +11,9 @@ import unittest
 from unittest.mock import patch, mock_open
 
 from sdvs.asm import ASM
-from sdvs.decoder import Decoder, Instruction
 from sdvs.constants import *
+from sdvs.decoder import Decoder, Instruction
+from sdvs.memory import Memory
 from sdvs.simulator import Simulator
 
 # Instructions file setup
@@ -29,14 +30,14 @@ EQ_INDEX = 36
 NOT_INDEX = 40
 JMP_INDEX = 41
 MOV_INDEX = 42
-LOADBOOL_INDEX = 43
-LOADBYTE_INDEX = 45
-LOADINT_INDEX = 47
-LOADSTATE_INDEX = 49
-STOREBOOL_INDEX = 51
-STOREBYTE_INDEX = 53
-STOREINT_INDEX = 55
-STORESTATE_INDEX = 57
+LOADBOOL_INDEX = 44
+LOADBYTE_INDEX = 46
+LOADINT_INDEX = 48
+LOADSTATE_INDEX = 50
+STOREBOOL_INDEX = 52
+STOREBYTE_INDEX = 54
+STOREINT_INDEX = 56
+STORESTATE_INDEX = 58
 
 binops = ["add", "sub", "mul", "div", "mod",
           "and", "or", "lt", "gt", "eq"]
@@ -46,21 +47,21 @@ jmp r3 32
 mov r3 r1
 mov r3 234
 loadbool r3 r1
-loadbool r3 234
+loadbool r3 8
 loadbyte r3 r1
-loadbyte r3 234
+loadbyte r3 8
 loadint r3 r1
-loadint r3 234
+loadint r3 8
 loadstate r3 r1
-loadstate r3 234
+loadstate r3 8
 storebool r3 r1
-storebool r3 234
+storebool r3 8
 storebyte r3 r1
-storebyte r3 234
+storebyte r3 8
 storeint r3 r1
-storeint r3 234
+storeint r3 8
 storestate r3 r1
-storestate r3 234
+storestate r3 8
 """
 
 
@@ -86,7 +87,7 @@ def setUpInstruction(op_code, cfg, data_type=VAL_BOOL):
     instruction.rb = 3
     instruction.imma = 122
     instruction.immb = 123
-    instruction.addr = 124
+    instruction.address = 124
     instruction.type = data_type
     return instruction
 
@@ -785,107 +786,251 @@ class TestSimulator(unittest.TestCase):
         self.simulator.process_one_instruction()
         self.assertEqual(234, self.simulator.registers[3].value)
 
+    # ---------------
+    # LOAD OPERATIONS
+    # ---------------
+
+    def testProcessLoadBoolRAA(self):
+        self.simulator.decoder.next_instruction_index = LOADBOOL_INDEX
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeeeee01ee)
+        self.simulator.registers[1].value = 8     # address
+        self.simulator.process_load()
+        self.assertEqual(1, self.simulator.registers[3].value)
+
+    def testProcessLoadBoolADR(self):
+        self.simulator.decoder.next_instruction_index = LOADBOOL_INDEX + 1
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeeeee01ee)
+        self.simulator.process_load()
+        self.assertEqual(1, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionLoadBoolRAA(self):
+        self.simulator.decoder.next_instruction_index = LOADBOOL_INDEX
+        self.simulator.memory = Memory(40, 0xeeeeee01ee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.process_one_instruction()
+        self.assertEqual(1, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionLoadBoolADR(self):
+        self.simulator.decoder.next_instruction_index = LOADBOOL_INDEX + 1
+        self.simulator.memory = Memory(40, 0xeeeeee01ee)
+        self.simulator.process_one_instruction()
+        self.assertEqual(1, self.simulator.registers[3].value)
+
+    def testProcessLoadByteRAA(self):
+        self.simulator.decoder.next_instruction_index = LOADBYTE_INDEX
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeeeee24ee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.process_load()
+        self.assertEqual(0x24, self.simulator.registers[3].value)
+
+    def testProcessLoadByteADR(self):
+        self.simulator.decoder.next_instruction_index = LOADBYTE_INDEX + 1
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeeeee24ee)
+        self.simulator.process_load()
+        self.assertEqual(0x24, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionLoadByteRAA(self):
+        self.simulator.decoder.next_instruction_index = LOADBYTE_INDEX
+        self.simulator.memory = Memory(40, 0xeeeeee24ee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.process_one_instruction()
+        self.assertEqual(0x24, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionLoadByteADR(self):
+        self.simulator.decoder.next_instruction_index = LOADBYTE_INDEX + 1
+        self.simulator.memory = Memory(40, 0xeeeeee24ee)
+        self.simulator.process_one_instruction()
+        self.assertEqual(0x24, self.simulator.registers[3].value)
+
+    def testProcessLoadIntRAA(self):
+        self.simulator.decoder.next_instruction_index = LOADINT_INDEX
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(48, 0xee12341234ee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.process_load()
+        self.assertEqual(0x12341234, self.simulator.registers[3].value)
+
+    def testProcessLoadIntADR(self):
+        self.simulator.decoder.next_instruction_index = LOADINT_INDEX + 1
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(48, 0xee12341234ee)
+        self.simulator.process_load()
+        self.assertEqual(0x12341234, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionLoadIntRAA(self):
+        self.simulator.decoder.next_instruction_index = LOADINT_INDEX
+        self.simulator.memory = Memory(48, 0xee12341234ee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.process_one_instruction()
+        self.assertEqual(0x12341234, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionLoadIntADR(self):
+        self.simulator.decoder.next_instruction_index = LOADINT_INDEX + 1
+        self.simulator.memory = Memory(48, 0xee12341234ee)
+        self.simulator.process_one_instruction()
+        self.assertEqual(0x12341234, self.simulator.registers[3].value)
+
+    def testProcessLoadStateRAA(self):
+        self.simulator.decoder.next_instruction_index = LOADSTATE_INDEX
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeee1234ee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.process_load()
+        self.assertEqual(0x1234, self.simulator.registers[3].value)
+
+    def testProcessLoadStateADR(self):
+        self.simulator.decoder.next_instruction_index = LOADSTATE_INDEX + 1
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeee1234ee)
+        self.simulator.process_load()
+        self.assertEqual(0x1234, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionLoadStateRAA(self):
+        self.simulator.decoder.next_instruction_index = LOADSTATE_INDEX
+        self.simulator.memory = Memory(40, 0xeeee1234ee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.process_one_instruction()
+        self.assertEqual(0x1234, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionLoadStateADR(self):
+        self.simulator.decoder.next_instruction_index = LOADSTATE_INDEX + 1
+        self.simulator.memory = Memory(40, 0xeeee1234ee)
+        self.simulator.process_one_instruction()
+        self.assertEqual(0x1234, self.simulator.registers[3].value)
+
     # ----------------
     # STORE OPERATIONS
     # ----------------
 
     def testProcessStoreBoolRAA(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREBOOL_INDEX
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[1].value = 8     # address
+        self.simulator.registers[3].value = 0x01  # value
+        self.simulator.process_store()
+        self.assertEqual(0xeeeeee01ee, self.simulator.memory.raw_memory)
 
     def testProcessStoreBoolADR(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREBOOL_INDEX + 1
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[3].value = 0x01  # value
+        self.simulator.process_store()
+        self.assertEqual(0xeeeeee01ee, self.simulator.memory.raw_memory)
 
     def testProcessOneInstructionStoreBoolRAA(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREBOOL_INDEX
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.registers[3].value = 0x01  # value
+        self.simulator.process_one_instruction()
+        self.assertEqual(0xeeeeee01ee, self.simulator.memory.raw_memory)
 
     def testProcessOneInstructionStoreBoolADR(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREBOOL_INDEX + 1
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[3].value = 0x01  # value
+        self.simulator.process_one_instruction()
+        self.assertEqual(0xeeeeee01ee, self.simulator.memory.raw_memory)
 
     def testProcessStoreByteRAA(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREBYTE_INDEX
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.registers[3].value = 0x24  # value
+        self.simulator.process_store()
+        self.assertEqual(0xeeeeee24ee, self.simulator.memory.raw_memory)
 
     def testProcessStoreByteADR(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREBYTE_INDEX + 1
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[3].value = 0x24  # value
+        self.simulator.process_store()
+        self.assertEqual(0xeeeeee24ee, self.simulator.memory.raw_memory)
 
     def testProcessOneInstructionStoreByteRAA(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREBYTE_INDEX
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.registers[3].value = 0x24  # value
+        self.simulator.process_one_instruction()
+        self.assertEqual(0xeeeeee24ee, self.simulator.memory.raw_memory)
 
     def testProcessOneInstructionStoreByteADR(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREBYTE_INDEX + 1
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[3].value = 0x24  # value
+        self.simulator.process_one_instruction()
+        self.assertEqual(0xeeeeee24ee, self.simulator.memory.raw_memory)
 
     def testProcessStoreIntRAA(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREINT_INDEX
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(48, 0xeeeeeeeeeeee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.registers[3].value = 0x12341234  # value
+        self.simulator.process_store()
+        self.assertEqual(0xee12341234ee, self.simulator.memory.raw_memory)
 
     def testProcessStoreIntADR(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREINT_INDEX + 1
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(48, 0xeeeeeeeeeeee)
+        self.simulator.registers[3].value = 0x12341234  # value
+        self.simulator.process_store()
+        self.assertEqual(0xee12341234ee, self.simulator.memory.raw_memory)
 
     def testProcessOneInstructionStoreIntRAA(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREINT_INDEX
+        self.simulator.memory = Memory(48, 0xeeeeeeeeeeee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.registers[3].value = 0x12341234  # value
+        self.simulator.process_one_instruction()
+        self.assertEqual(0xee12341234ee, self.simulator.memory.raw_memory)
 
     def testProcessOneInstructionStoreIntADR(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STOREINT_INDEX + 1
+        self.simulator.memory = Memory(48, 0xeeeeeeeeeeee)
+        self.simulator.registers[3].value = 0x12341234  # value
+        self.simulator.process_one_instruction()
+        self.assertEqual(0xee12341234ee, self.simulator.memory.raw_memory)
 
     def testProcessStoreStateRAA(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STORESTATE_INDEX
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.registers[3].value = 0x1234  # value
+        self.simulator.process_store()
+        self.assertEqual(0xeeee1234ee, self.simulator.memory.raw_memory)
 
     def testProcessStoreStateADR(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STORESTATE_INDEX + 1
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.registers[3].value = 0x1234  # value
+        self.simulator.process_store()
+        self.assertEqual(0xeeee1234ee, self.simulator.memory.raw_memory)
 
     def testProcessOneInstructionStoreStateRAA(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STORESTATE_INDEX
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[1].value = 8  # address
+        self.simulator.registers[3].value = 0x1234  # value
+        self.simulator.process_one_instruction()
+        self.assertEqual(0xeeee1234ee, self.simulator.memory.raw_memory)
 
     def testProcessOneInstructionStoreStateADR(self):
-        pass
-
-    # ---------------
-    # LOAD OPERATIONS
-    # ---------------
-
-
-    def testProcessLoadBoolRAA(self):
-        pass
-
-    def testProcessLoadBoolADR(self):
-        pass
-
-    def testProcessOneInstructionLoadBoolRAA(self):
-        pass
-
-    def testProcessOneInstructionLoadBoolADR(self):
-        pass
-
-    def testProcessLoadByteRAA(self):
-        pass
-
-    def testProcessLoadByteADR(self):
-        pass
-
-    def testProcessOneInstructionLoadByteRAA(self):
-        pass
-
-    def testProcessOneInstructionLoadByteADR(self):
-        pass
-
-    def testProcessLoadIntRAA(self):
-        pass
-
-    def testProcessLoadIntADR(self):
-        pass
-
-    def testProcessOneInstructionLoadIntRAA(self):
-        pass
-
-    def testProcessOneInstructionLoadIntADR(self):
-        pass
-
-    def testProcessLoadStateRAA(self):
-        pass
-
-    def testProcessLoadStateADR(self):
-        pass
-
-    def testProcessOneInstructionLoadStateRAA(self):
-        pass
-
-    def testProcessOneInstructionLoadStateADR(self):
-        pass
+        self.simulator.decoder.next_instruction_index = STORESTATE_INDEX + 1
+        self.simulator.memory = Memory(40, 0xeeeeeeeeee)
+        self.simulator.registers[3].value = 0x1234  # value
+        self.simulator.process_one_instruction()
+        self.assertEqual(0xeeee1234ee, self.simulator.memory.raw_memory)

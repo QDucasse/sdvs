@@ -17,7 +17,7 @@ class Instruction:
     def __init__(self, op_code, cfg_mask=0b00, inst_type=0b00,
                  rd=0b0000, ra=0b0000, rb=0b0000,
                  imma=0b00000000000, immb=0b00000000000,
-                 addr=0b000000000000000000000000):
+                 address=0b000000000000000000000000):
         self.op_code = op_code
         self.cfg_mask = cfg_mask
         self.rd = rd
@@ -25,7 +25,7 @@ class Instruction:
         self.rb = rb
         self.imma = imma
         self.immb = immb
-        self.addr = addr
+        self.address = address
         self.type = inst_type
 
     def __eq__(self, other):
@@ -36,7 +36,7 @@ class Instruction:
                 self.rb == other.rb and
                 self.imma == other.imma and
                 self.immb == other.immb and
-                self.addr == other.addr and
+                self.address == other.address and
                 self.type == other.type)
 
     def __str__(self):
@@ -49,7 +49,7 @@ class Instruction:
             self.rb,
             self.imma,
             self.immb,
-            self.addr
+            self.address
         )
 
 
@@ -84,7 +84,7 @@ class Decoder:
                 instruction.imma = (bitInstruction & 0x000007FF)  # 0000 0000 0000 0000 0000 0111 1111 1111
             elif instruction.cfg_mask == LOAD_ADR:
                 instruction.type = (bitInstruction & 0x03000000) >> 24  # 0000 0011 0000 0000 0000 0000 0000 0000
-                instruction.addr = (bitInstruction & 0x000FFFFF)  # 0000 0000 0000 1111 1111 1111 1111 1111
+                instruction.address = (bitInstruction & 0x000FFFFF)  # 0000 0000 0000 1111 1111 1111 1111 1111
             elif instruction.cfg_mask == LOAD_RAA:
                 instruction.type = (bitInstruction & 0x03000000) >> 24  # 0000 0011 0000 0000 0000 0000 0000 0000
                 instruction.ra = (bitInstruction & 0x0000000F)  # 0000 0000 0000 0000 0000 0000 0000 1111
@@ -94,14 +94,14 @@ class Decoder:
             instruction.rd = (bitInstruction & 0x00F00000) >> 20  # 0000 0000 1111 0000 0000 0000 0000 0000
             if instruction.cfg_mask == STORE_ADR:
                 instruction.type = (bitInstruction & 0x03000000) >> 24  # 0000 0011 0000 0000 0000 0000 0000 0000
-                instruction.addr = (bitInstruction & 0x000FFFFF)  # 0000 0000 0000 1111 1111 1111 1111 1111
+                instruction.address = (bitInstruction & 0x000FFFFF)  # 0000 0000 0000 1111 1111 1111 1111 1111
             elif instruction.cfg_mask == STORE_RAA:
                 instruction.type = (bitInstruction & 0x03000000) >> 24  # 0000 0011 0000 0000 0000 0000 0000 0000
                 instruction.ra = (bitInstruction & 0x0000000F)  # 0000 0000 0000 0000 0000 0000 0000 1111
 
         elif op_code == OP_JMP:
             instruction.rd = (bitInstruction & 0x0F000000) >> 24  # 0000 1111 0000 0000 0000 0000 0000 0000
-            instruction.addr = (bitInstruction & 0x00FFFFFF)  # 0000 0000 1111 1111 1111 1111 1111 1111
+            instruction.address = (bitInstruction & 0x00FFFFFF)  # 0000 0000 1111 1111 1111 1111 1111 1111
 
         else:  # Binary operation
             instruction.cfg_mask = (bitInstruction & 0x0C000000) >> 26  # 0000 1100 0000 0000 0000 0000 0000 0000

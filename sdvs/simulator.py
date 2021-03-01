@@ -174,7 +174,7 @@ class Simulator:
         condition in rd is true
         """
         if self.retrieve_register_value(self.current_instruction.rd):
-            self.decoder.next_instruction_index = self.current_instruction.addr / INSTRUCTION_SIZE
+            self.decoder.next_instruction_index = self.current_instruction.address / INSTRUCTION_SIZE
 
     def process_store(self):
         """
@@ -184,13 +184,12 @@ class Simulator:
         value = self.retrieve_register_value(self.current_instruction.rd)
         if self.current_instruction.cfg_mask == STORE_ADR:
             # Store in memory
-            self.memory.set_at_address(value, self.current_instruction.address,
-                                       self.current_instruction.type)
+            self.memory.set_at_address(self.current_instruction.type, value, self.current_instruction.address)
         elif self.current_instruction.cfg_mask == STORE_RAA:
             # Get address out of register
             address = self.retrieve_register_value(self.current_instruction.ra)
             # Store in memory
-            self.memory.set_at_address(value, address, self.current_instruction.type)
+            self.memory.set_at_address(self.current_instruction.type, value, address)
 
     def process_load(self):
         """

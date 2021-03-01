@@ -86,7 +86,7 @@ class TestDecoder(unittest.TestCase):
 
     def test_decode_jmp(self):
         # jmp r3 234
-        expected_instruction = Instruction(OP_JMP, rd=3, addr=234)
+        expected_instruction = Instruction(OP_JMP, rd=3, address=234)
         self.assertEqual(expected_instruction, self.decoder.decode(self.bit_instructions[5]))
 
     def test_decode_mov_reg(self):
@@ -106,7 +106,7 @@ class TestDecoder(unittest.TestCase):
 
     def test_decode_load_bool_adr(self):
         # loadbool r3 234
-        expected_instruction = Instruction(OP_LOAD, cfg_mask=LOAD_ADR, rd=3, addr=234, inst_type=VAL_BOOL)
+        expected_instruction = Instruction(OP_LOAD, cfg_mask=LOAD_ADR, rd=3, address=234, inst_type=VAL_BOOL)
         self.assertEqual(expected_instruction, self.decoder.decode(self.bit_instructions[9]))
 
     def test_decode_load_byte_raa(self):
@@ -116,7 +116,7 @@ class TestDecoder(unittest.TestCase):
 
     def test_decode_load_byte_adr(self):
         # loadbyte r3 234
-        expected_instruction = Instruction(OP_LOAD, cfg_mask=LOAD_ADR, rd=3, addr=234, inst_type=VAL_BYTE)
+        expected_instruction = Instruction(OP_LOAD, cfg_mask=LOAD_ADR, rd=3, address=234, inst_type=VAL_BYTE)
         self.assertEqual(expected_instruction, self.decoder.decode(self.bit_instructions[11]))
 
     def test_decode_load_int_raa(self):
@@ -126,7 +126,7 @@ class TestDecoder(unittest.TestCase):
 
     def test_decode_load_int_adr(self):
         # loadint r3 234
-        expected_instruction = Instruction(OP_LOAD, cfg_mask=LOAD_ADR, rd=3, addr=234, inst_type=VAL_INT)
+        expected_instruction = Instruction(OP_LOAD, cfg_mask=LOAD_ADR, rd=3, address=234, inst_type=VAL_INT)
         self.assertEqual(expected_instruction, self.decoder.decode(self.bit_instructions[13]))
 
     def test_decode_load_state_raa(self):
@@ -136,7 +136,7 @@ class TestDecoder(unittest.TestCase):
 
     def test_decode_load_state_adr(self):
         # loadstate r3 234
-        expected_instruction = Instruction(OP_LOAD, cfg_mask=LOAD_ADR, rd=3, addr=234, inst_type=VAL_STATE)
+        expected_instruction = Instruction(OP_LOAD, cfg_mask=LOAD_ADR, rd=3, address=234, inst_type=VAL_STATE)
         self.assertEqual(expected_instruction, self.decoder.decode(self.bit_instructions[15]))
 
     def test_decode_store_bool_raa(self):
@@ -146,7 +146,7 @@ class TestDecoder(unittest.TestCase):
 
     def test_decode_store_bool_adr(self):
         # storebool r3 234
-        expected_instruction = Instruction(OP_STORE, cfg_mask=STORE_ADR, rd=3, addr=234, inst_type=VAL_BOOL)
+        expected_instruction = Instruction(OP_STORE, cfg_mask=STORE_ADR, rd=3, address=234, inst_type=VAL_BOOL)
         self.assertEqual(expected_instruction, self.decoder.decode(self.bit_instructions[17]))
 
     def test_decode_store_byte_raa(self):
@@ -156,7 +156,7 @@ class TestDecoder(unittest.TestCase):
 
     def test_decode_store_byte_adr(self):
         # storebyte r3 234
-        expected_instruction = Instruction(OP_STORE, cfg_mask=STORE_ADR, rd=3, addr=234, inst_type=VAL_BYTE)
+        expected_instruction = Instruction(OP_STORE, cfg_mask=STORE_ADR, rd=3, address=234, inst_type=VAL_BYTE)
         self.assertEqual(expected_instruction, self.decoder.decode(self.bit_instructions[19]))
 
     def test_decode_store_int_raa(self):
@@ -166,7 +166,7 @@ class TestDecoder(unittest.TestCase):
 
     def test_decode_store_int_adr(self):
         # storeint r3 234
-        expected_instruction = Instruction(OP_STORE, cfg_mask=STORE_ADR, rd=3, addr=234, inst_type=VAL_INT)
+        expected_instruction = Instruction(OP_STORE, cfg_mask=STORE_ADR, rd=3, address=234, inst_type=VAL_INT)
         self.assertEqual(expected_instruction, self.decoder.decode(self.bit_instructions[21]))
 
     def test_decode_store_state_raa(self):
@@ -176,5 +176,5 @@ class TestDecoder(unittest.TestCase):
 
     def test_decode_store_state_adr(self):
         # storestate r3 234
-        expected_instruction = Instruction(OP_STORE, cfg_mask=STORE_ADR, rd=3, addr=234, inst_type=VAL_STATE)
+        expected_instruction = Instruction(OP_STORE, cfg_mask=STORE_ADR, rd=3, address=234, inst_type=VAL_STATE)
         self.assertEqual(expected_instruction, self.decoder.decode(self.bit_instructions[23]))
