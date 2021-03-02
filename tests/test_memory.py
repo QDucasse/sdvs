@@ -8,7 +8,7 @@
 # Test file!
 
 import unittest
-from sdvs.memory import *
+from memory import *
 
 
 class TestMemory(unittest.TestCase):

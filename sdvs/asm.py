@@ -6,7 +6,7 @@
 # ===========================================
 # Assembler: Process textual assembler to generate instructions.
 
-from sdvs.constants import *
+from constants import *
 
 
 # Helper functions

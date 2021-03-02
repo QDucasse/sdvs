@@ -9,7 +9,7 @@
 
 import unittest
 from unittest.mock import patch, mock_open
-from sdvs.binary_reader import BinaryReader
+from binary_reader import BinaryReader
 
 mock_file = b'\x80\x80\x90\x1c\xde\xa3\x12\x14'
 

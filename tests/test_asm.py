@@ -9,8 +9,8 @@
 import unittest
 from unittest.mock import patch, mock_open
 
-from sdvs.asm import *
-from sdvs.constants import *
+from asm import *
+from constants import *
 
 mock_file = """
 add r3 r1 r2

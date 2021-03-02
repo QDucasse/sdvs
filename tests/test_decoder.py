@@ -9,9 +9,9 @@
 
 import unittest
 from unittest.mock import patch, mock_open
-from sdvs.decoder import Decoder, Instruction
-from sdvs.asm import ASM
-from sdvs.constants import *
+from decoder import Decoder, Instruction
+from asm import ASM
+from constants import *
 
 mock_file = """
 add r3 r1 r2

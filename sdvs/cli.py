@@ -19,7 +19,10 @@ class Parser(argparse.ArgumentParser):
         """
         Define arguments to parse.
         """
-        self.add_argument("--step", action="store_true", help="Trigger step execution.")
+        self.add_argument("--step", "-s", action="store_true", help="Trigger step execution.")
+        self.add_argument("--bin", "-b", help="Binary location")
+        self.add_argument("--gui", "-g", action="store_true", help="Trigger GUI")
+
 
     def parse(self, args):
         """

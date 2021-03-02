@@ -10,11 +10,11 @@
 import unittest
 from unittest.mock import patch, mock_open
 
-from sdvs.asm import ASM
-from sdvs.constants import *
-from sdvs.decoder import Decoder, Instruction
-from sdvs.memory import Memory
-from sdvs.simulator import Simulator
+from asm import ASM
+from constants import *
+from decoder import Decoder, Instruction
+from memory import Memory
+from simulator import Simulator
 
 # Instructions file setup
 ADD_INDEX = 0
