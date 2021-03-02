@@ -253,7 +253,7 @@ if __name__ == "__main__":
     from binary_reader import BinaryReader
     from decoder import Decoder
     from memory import Memory
-    bin_instructions = BinaryReader.read_file("../sdve-beem-benchmark/bin/adding.6.out")
+    bin_instructions = BinaryReader.read_instructions("../sdve-beem-benchmark/bin/adding.6.out")
     memory = Memory(128, 0x22221111333333332222222211111111)
     simulator = Simulator(Decoder(bin_instructions), memory)
     simulator.process_instructions()

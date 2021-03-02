@@ -9,7 +9,7 @@
 class BinaryReader:
 
     @classmethod
-    def read_file(cls, file_name):
+    def read_instructions(cls, file_name):
         """
         Reads a binary file and returns a list with the processed instructions.
         :return: 32-bits instructions list
@@ -22,7 +22,17 @@ class BinaryReader:
                 instruction = file.read(4)
         return instructions
 
+    @classmethod
+    def read_memory(cls, file_name):
+        """
+        Reads a binary file with the memory representation of the globals configuration.
+        :return: raw memory
+        """
+        with open(file_name, "rb") as file:
+            content = int.from_bytes(file.read(), "big")
+        return content
+
 
 if __name__ == "__main__":
-    bin_instructions = BinaryReader.read_file("../sdve-beem-benchmark/bin/adding.6.out")
+    bin_instructions = BinaryReader.read_instructions("../sdve-beem-benchmark/bin/adding.6.out")
     print(bin_instructions)

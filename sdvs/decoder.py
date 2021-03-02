@@ -91,7 +91,7 @@ class Decoder:
 
 if __name__ == "__main__":
     from binary_reader import BinaryReader
-    bin_instructions = BinaryReader.read_file("../sdve-beem-benchmark/bin/adding.6.out")
+    bin_instructions = BinaryReader.read_instructions("../sdve-beem-benchmark/bin/adding.6.out")
     print(bin_instructions)
     decoder = Decoder(bin_instructions)
     print(decoder.decode_next())

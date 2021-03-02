@@ -30,6 +30,32 @@ class Instruction:
         OP_LOAD: "OP_LOAD"
     }
 
+    BIN_CFG_STR = {
+        CFG_RR: "CFG_RR",
+        CFG_RI: "CFG_RI",
+        CFG_IR: "CFG_IR",
+        CFG_II: "CFG_II"
+    }
+
+    STORE_CFG_STR = {
+        STORE_ADR: "STORE_ADR",
+        STORE_RAA: "STORE_RAA"
+    }
+
+    LOAD_CFG_STR = {
+        LOAD_ADR: "LOAD_ADR",
+        LOAD_RAA: "LOAD_RAA",
+        LOAD_REG: "LOAD_REG",
+        LOAD_IMM: "LOAD_IMM"
+    }
+
+    TYPE_STR = {
+        VAL_BOOL: "BOOL",
+        VAL_BYTE: "BYTE",
+        VAL_INT: "INT",
+        VAL_STATE: "STATE"
+    }
+
     def __init__(self, op_code, cfg_mask=0b00, inst_type=0b00,
                  rd=0b0000, ra=0b0000, rb=0b0000,
                  imma=0b00000000000, immb=0b00000000000,
@@ -56,4 +82,20 @@ class Instruction:
                 self.type == other.type)
 
     def __str__(self):
-        return "Instruction {}".format(self.OP_CODES_STR[self.op_code])
+        return "Instruction {}".format(self.op_str)
+
+    def op_str(self):
+        return self.OP_CODES_STR[self.op_code]
+
+    def cfg_str(self):
+        if self.op_code == OP_LOAD:
+            return self.LOAD_CFG_STR[self.cfg_mask]
+        elif self.op_code == OP_STORE:
+            return self.STORE_CFG_STR[self.cfg_mask]
+        elif self.op_code == OP_JMP | self.op_code == OP_NOT:
+            return "-"
+        else:
+            return self.BIN_CFG_STR[self.cfg_mask]
+
+    def type_str(self):
+        return self.TYPE_STR[self.type]
