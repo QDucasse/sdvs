@@ -23,6 +23,21 @@ class GUI:
             bin_instructions = BinaryReader.read_file(filename)
         self.simulator = Simulator(Decoder(bin_instructions))
 
+        # Instruction variables
+        self.op_code = StringVar()
+        self.cfg_mask = StringVar()
+        self.rd = IntVar()
+        self.ra = IntVar()
+        self.rb = IntVar()
+        self.imma = IntVar()
+        self.immb = IntVar()
+        self.address = IntVar()
+        self.type = StringVar()
+
+        # Memory variables
+
+        # Registers variables
+
         # Widgets and layout
         self.create_instruction_frame()
         self.create_memory_frame()
@@ -34,47 +49,14 @@ class GUI:
 
     # Instruction
     def create_instruction_frame(self):
-        self.create_instruction_variables()
-        self.create_instruction_widgets()
-        self.create_instruction_layout()
-
-    def create_instruction_variables(self):
-        pass
-
-    def create_instruction_widgets(self):
-        pass
-
-    def create_instruction_layout(self):
         pass
 
     # Memory
     def create_memory_frame(self):
-        self.create_memory_variables()
-        self.create_memory_widgets()
-        self.create_memory_layout()
-
-    def create_memory_variables(self):
-        pass
-
-    def create_memory_widgets(self):
-        pass
-
-    def create_memory_layout(self):
         pass
 
     # Registers
     def create_registers_frame(self):
-        self.create_registers_variables()
-        self.create_registers_widgets()
-        self.create_registers_layout()
-
-    def create_registers_variables(self):
-        pass
-
-    def create_registers_widgets(self):
-        pass
-
-    def create_registers_layout(self):
         pass
 
     # Actual simulation
@@ -87,5 +69,5 @@ class GUI:
 
 if __name__ == "__main__":
     root = Tk()
-    my_gui = GUI(root, "../sdvc/bin/anderson.8.out")
+    my_gui = GUI(root, "../sdvc/bin/adding.6.out")
     root.mainloop()

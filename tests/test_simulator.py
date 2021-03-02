@@ -99,7 +99,8 @@ class TestSimulator(unittest.TestCase):
         asm = ASM()
         bit_instructions = asm.process_file("path/to/mock/file")
         decoder = Decoder(bit_instructions)
-        self.simulator = Simulator(decoder)
+        memory = Memory(0, 0)
+        self.simulator = Simulator(decoder, memory)
 
     def testAssignRegisterValue(self):
         for reg in self.simulator.registers:

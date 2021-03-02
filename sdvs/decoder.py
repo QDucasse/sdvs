@@ -7,50 +7,7 @@
 # Decoder: Process 32-bits instruction into their corresponding instruction object.
 
 from constants import *
-
-
-class Instruction:
-    """
-    Instruction structure to hold the decoded parts of the 32-bits instruction.
-    """
-
-    def __init__(self, op_code, cfg_mask=0b00, inst_type=0b00,
-                 rd=0b0000, ra=0b0000, rb=0b0000,
-                 imma=0b00000000000, immb=0b00000000000,
-                 address=0b000000000000000000000000):
-        self.op_code = op_code
-        self.cfg_mask = cfg_mask
-        self.rd = rd
-        self.ra = ra
-        self.rb = rb
-        self.imma = imma
-        self.immb = immb
-        self.address = address
-        self.type = inst_type
-
-    def __eq__(self, other):
-        return (self.op_code == other.op_code and
-                self.cfg_mask == other.cfg_mask and
-                self.rd == other.rd and
-                self.ra == other.ra and
-                self.rb == other.rb and
-                self.imma == other.imma and
-                self.immb == other.immb and
-                self.address == other.address and
-                self.type == other.type)
-
-    def __str__(self):
-        return "Instruction object OP_CODE={} rd={}\ncfg_mask={} type={}\n imma={} immb={}\n addr={}".format(
-            self.op_code,
-            self.rd,
-            self.cfg_mask,
-            self.type,
-            self.ra,
-            self.rb,
-            self.imma,
-            self.immb,
-            self.address
-        )
+from instruction import Instruction
 
 
 class Decoder:
@@ -130,3 +87,12 @@ class Decoder:
         decoded_instruction = self.decode(self.bit_instructions[self.next_instruction_index])
         self.next_instruction_index += 1
         return decoded_instruction
+
+
+if __name__ == "__main__":
+    from binary_reader import BinaryReader
+    bin_instructions = BinaryReader.read_file("../sdve-beem-benchmark/bin/adding.6.out")
+    print(bin_instructions)
+    decoder = Decoder(bin_instructions)
+    print(decoder.decode_next())
+

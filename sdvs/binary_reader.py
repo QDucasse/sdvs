@@ -18,6 +18,11 @@ class BinaryReader:
         with open(file_name, "rb") as file:
             instruction = file.read(4)  # read(1) processes 1 byte, we need 4 for an instruction
             while instruction:
-                instructions.append(int.from_bytes(instruction, "big"))
+                instructions.append(int.from_bytes(instruction, "little"))
                 instruction = file.read(4)
         return instructions
+
+
+if __name__ == "__main__":
+    bin_instructions = BinaryReader.read_file("../sdve-beem-benchmark/bin/adding.6.out")
+    print(bin_instructions)

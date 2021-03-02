@@ -6,7 +6,7 @@
 # ===========================================
 # Simulator: Process instructions one by one and show the results of their execution
 
-from sdvs.constants import *
+from constants import *
 
 
 class Register:
@@ -19,12 +19,12 @@ class Register:
 
 class Simulator:
 
-    def __init__(self, decoder):
+    def __init__(self, decoder, memory):
         self.decoder = decoder
         self.current_instruction = None
-        self.memory = None
+        self.memory = memory
         self.registers = []
-        for i in range(REG_NUMBER + 1):
+        for i in range(REG_NUMBER):
             self.registers.append(Register(i, REG_SIZE))
 
     def assign_register_value(self, number, value):
@@ -174,7 +174,7 @@ class Simulator:
         condition in rd is true
         """
         if self.retrieve_register_value(self.current_instruction.rd):
-            self.decoder.next_instruction_index = self.current_instruction.address / INSTRUCTION_SIZE
+            self.decoder.next_instruction_index = self.current_instruction.address // INSTRUCTION_SIZE
 
     def process_store(self):
         """
@@ -235,3 +235,27 @@ class Simulator:
         OP_STORE: process_store,
         OP_LOAD: process_load
     }
+
+    def process_instructions(self):
+        for _ in range(len(self.decoder.bit_instructions)):
+            print(self.decoder.decode(self.decoder.bit_instructions[self.decoder.next_instruction_index]))
+            self.process_one_instruction()
+            self.print_registers()
+
+    def print_registers(self):
+        print("Registers State:")
+        for reg in self.registers:
+            print("R{}: {}".format(reg.number, hex(reg.value)))
+        print("----------------")
+
+
+if __name__ == "__main__":
+    from binary_reader import BinaryReader
+    from decoder import Decoder
+    from memory import Memory
+    bin_instructions = BinaryReader.read_file("../sdve-beem-benchmark/bin/adding.6.out")
+    memory = Memory(128, 0x22221111333333332222222211111111)
+    simulator = Simulator(Decoder(bin_instructions), memory)
+    simulator.process_instructions()
+
+
