@@ -92,6 +92,12 @@ class GUI:
         self.label_r13_value = tk.Label(self.registers_data_frame, textvariable=self.registers[13])
         self.label_r14_value = tk.Label(self.registers_data_frame, textvariable=self.registers[14])
         self.label_r15_value = tk.Label(self.registers_data_frame, textvariable=self.registers[15])
+        self.register_labels = [
+            self.label_r0_value, self.label_r1_value, self.label_r2_value, self.label_r3_value,
+            self.label_r4_value, self.label_r5_value, self.label_r6_value, self.label_r7_value,
+            self.label_r8_value, self.label_r9_value, self.label_r10_value, self.label_r11_value,
+            self.label_r12_value, self.label_r13_value, self.label_r14_value, self.label_r15_value
+        ]
 
         # Buttons
         self.step_button = ttk.Button(self.buttons_frame, text="Step", command=self.process_one_instruction)
@@ -119,8 +125,6 @@ class GUI:
         self.fill_registers_frame()
         # Buttons
         self.buttons_frame.grid(row=2, column=0, sticky=tk.S)
-
-        self.create_bindings()
 
     # -----------
     # CLEAR VARS
@@ -225,6 +229,7 @@ class GUI:
         self.display_instruction(self.simulator.current_instruction)
         self.display_registers()
         self.display_memory()
+        self.display_colors()
 
     def display_instruction(self, instruction):
         self.clear_instruction()
@@ -276,9 +281,71 @@ class GUI:
         for reg in self.simulator.registers:
             self.registers[reg.number].set(hex(reg.value))
 
+    def clear_colors(self):
+        for label in self.register_labels:
+            label.config(fg="black")
+        self.label_rd_value.config(fg="black")
+        self.label_ra_value.config(fg="black")
+        self.label_rb_value.config(fg="black")
+        self.label_imma_value.config(fg="black")
+        self.label_immb_value.config(fg="black")
+        self.label_address_value.config(fg="black")
+
+    def change_reg_color(self, number, color):
+        self.register_labels[number].config(fg=color)
+
+    def color_rd(self, color):
+        self.change_reg_color(self.simulator.current_instruction.rd, color)
+        self.label_rd_value.config(fg=color)
+
+    def color_ra(self, color):
+        self.change_reg_color(self.simulator.current_instruction.ra, color)
+        self.label_ra_value.config(fg=color)
+
+    def color_rb(self, color):
+        self.change_reg_color(self.simulator.current_instruction.rb, color)
+        self.label_rb_value.config(fg=color)
+
+    def display_colors(self):
+        self.clear_colors()
+        # Registers
+        op_code = self.simulator.current_instruction.op_code
+        cfg_mask = self.simulator.current_instruction.cfg_mask
+        if op_code == OP_STORE:
+            self.color_rd("green")
+            self.label_address_value.config(fg="red")
+        elif op_code == OP_JMP:
+            self.color_rd("green")
+            self.label_address_value.config(fg="red")
+        elif op_code == OP_LOAD:
+            self.color_rd("red")
+            if cfg_mask == LOAD_REG or cfg_mask == LOAD_RAA:
+                self.color_ra("green")
+            elif cfg_mask == LOAD_IMM:
+                self.label_imma_value.config(fg="green")
+            elif cfg_mask == LOAD_ADR:
+                self.label_address_value.config(fg="green")
+        elif op_code == OP_NOT:
+            self.color_rd("red")
+            self.color_ra("green")
+        else:
+            if cfg_mask == CFG_RR:
+                self.color_ra("green")
+                self.color_rb("green")
+            elif cfg_mask == CFG_RI:
+                self.color_ra("green")
+                self.label_immb_value.config(fg="green")
+            elif cfg_mask == CFG_IR:
+                self.label_imma_value.config(fg="green")
+                self.color_rb("green")
+            elif cfg_mask == CFG_II:
+                self.label_imma_value.config(fg="green")
+                self.label_immb_value.config(fg="green")
+            self.color_rd("red")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
     my_gui = GUI(root, bin_file="../sdve-beem-benchmark/bin/adding.6.out")
-    my_gui.simulator.memory = Memory(128, 0x22221111333333332222222211111111)
+    my_gui.simulator.memory = Memory(128, 0x22221111333333332222222200000001)
     root.mainloop()

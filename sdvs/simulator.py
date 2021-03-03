@@ -9,6 +9,10 @@
 from constants import *
 
 
+def bool_to_int(boolean):
+    return 1 if boolean else 0
+
+
 class Register:
     def __init__(self, number, size):
         self.number = number
@@ -122,7 +126,7 @@ class Simulator:
         """
         left_operand, right_operand = self.process_binary_operands()
         self.assign_register_value(self.current_instruction.rd,
-                                   left_operand and right_operand)
+                                   bool_to_int(left_operand and right_operand))
 
     def process_or(self):
         """
@@ -131,7 +135,7 @@ class Simulator:
         """
         left_operand, right_operand = self.process_binary_operands()
         self.assign_register_value(self.current_instruction.rd,
-                                   left_operand or right_operand)
+                                   bool_to_int(left_operand or right_operand))
 
     def process_less_than(self):
         """
@@ -140,7 +144,7 @@ class Simulator:
         """
         left_operand, right_operand = self.process_binary_operands()
         self.assign_register_value(self.current_instruction.rd,
-                                   left_operand < right_operand)
+                                   bool_to_int(left_operand < right_operand))
 
     def process_greater_than(self):
         """
@@ -149,7 +153,7 @@ class Simulator:
         """
         left_operand, right_operand = self.process_binary_operands()
         self.assign_register_value(self.current_instruction.rd,
-                                   left_operand > right_operand)
+                                   bool_to_int(left_operand > right_operand))
 
     def process_equal(self):
         """
@@ -158,7 +162,7 @@ class Simulator:
         """
         left_operand, right_operand = self.process_binary_operands()
         self.assign_register_value(self.current_instruction.rd,
-                                   left_operand == right_operand)
+                                   bool_to_int(left_operand == right_operand))
 
     def process_not(self):
         """
@@ -166,7 +170,7 @@ class Simulator:
         Assign not(ra) in the destination register
         """
         self.assign_register_value(self.current_instruction.rd,
-                                   not(self.retrieve_register_value(self.current_instruction.ra)))
+                                   bool_to_int(not(self.retrieve_register_value(self.current_instruction.ra))))
 
     def process_jmp(self):
         """
@@ -254,7 +258,7 @@ if __name__ == "__main__":
     from decoder import Decoder
     from memory import Memory
     bin_instructions = BinaryReader.read_instructions("../sdve-beem-benchmark/bin/adding.6.out")
-    memory = Memory(128, 0x22221111333333332222222211111111)
+    memory = Memory(128, 0x22221111333333332222222200000001)
     simulator = Simulator(Decoder(bin_instructions), memory)
     simulator.process_instructions()
 
