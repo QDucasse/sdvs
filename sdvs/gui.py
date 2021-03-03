@@ -6,7 +6,8 @@
 # ===========================================
 # GUI: The graphical interface of the project
 import os
-from tkinter import Label, Button, Tk, StringVar, IntVar, Frame, W, N, E
+import tkinter as tk
+from tkinter import ttk
 
 from binary_reader import BinaryReader
 from constants import *
@@ -30,81 +31,96 @@ class GUI:
         self.simulator = Simulator(Decoder(bin_instructions), memory)
 
         # Frame definitions
-        self.instruction_frame = Frame(parent)  # top left
-        self.instruction_title_frame = Frame(self.instruction_frame)
-        self.instruction_data_frame = Frame(self.instruction_frame)
-        self.memory_reg_frame = Frame(parent)  # top right
-        self.memory_frame = Frame(self.memory_reg_frame)  # top memory
-        self.memory_title_frame = Frame(self.memory_frame)
-        self.memory_data_frame = Frame(self.memory_frame)
-        self.registers_frame = Frame(self.memory_reg_frame)  # top registers
-        self.registers_title_frame = Frame(self.registers_frame)
-        self.registers_data_frame = Frame(self.registers_frame)
+        self.left_frame = tk.Frame(parent)  # top left
+        self.instruction_title_frame = tk.Frame(self.left_frame)
+        self.instruction_data_frame = tk.Frame(self.left_frame)
+        self.right_frame = tk.Frame(parent)  # top right
+        self.memory_frame = tk.Frame(self.right_frame)  # top memory
+        self.memory_title_frame = tk.Frame(self.memory_frame)
+        self.memory_data_frame = tk.Frame(self.memory_frame)
+        self.registers_frame = tk.Frame(self.right_frame)  # top registers
+        self.registers_title_frame = tk.Frame(self.registers_frame)
+        self.registers_data_frame = tk.Frame(self.registers_frame)
+        self.buttons_frame = tk.Frame(self.right_frame)
 
         # Instruction Variables
-        self.op_code = StringVar()
-        self.cfg_mask = StringVar()
-        self.rd = StringVar()
-        self.ra = StringVar()
-        self.rb = StringVar()
-        self.imma = StringVar()
-        self.immb = StringVar()
-        self.address = StringVar()
-        self.type = StringVar()
+        self.op_code = tk.StringVar()
+        self.cfg_mask = tk.StringVar()
+        self.rd = tk.StringVar()
+        self.ra = tk.StringVar()
+        self.rb = tk.StringVar()
+        self.imma = tk.StringVar()
+        self.immb = tk.StringVar()
+        self.address = tk.StringVar()
+        self.type = tk.StringVar()
         self.clear_instruction()
         # Instruction Values
-        self.label_op_code_value = Label(self.instruction_data_frame, textvariable=self.op_code)
-        self.label_cfg_mask_value = Label(self.instruction_data_frame, textvariable=self.cfg_mask)
-        self.label_type_value = Label(self.instruction_data_frame, textvariable=self.type)
-        self.label_rd_value = Label(self.instruction_data_frame, textvariable=self.rd)
-        self.label_ra_value = Label(self.instruction_data_frame, textvariable=self.ra)
-        self.label_rb_value = Label(self.instruction_data_frame, textvariable=self.rb)
-        self.label_imma_value = Label(self.instruction_data_frame, textvariable=self.imma)
-        self.label_immb_value = Label(self.instruction_data_frame, textvariable=self.immb)
-        self.label_address_value = Label(self.instruction_data_frame, textvariable=self.address)
+        self.label_op_code_value = tk.Label(self.instruction_data_frame, textvariable=self.op_code)
+        self.label_cfg_mask_value = tk.Label(self.instruction_data_frame, textvariable=self.cfg_mask)
+        self.label_type_value = tk.Label(self.instruction_data_frame, textvariable=self.type)
+        self.label_rd_value = tk.Label(self.instruction_data_frame, textvariable=self.rd)
+        self.label_ra_value = tk.Label(self.instruction_data_frame, textvariable=self.ra)
+        self.label_rb_value = tk.Label(self.instruction_data_frame, textvariable=self.rb)
+        self.label_imma_value = tk.Label(self.instruction_data_frame, textvariable=self.imma)
+        self.label_immb_value = tk.Label(self.instruction_data_frame, textvariable=self.immb)
+        self.label_address_value = tk.Label(self.instruction_data_frame, textvariable=self.address)
 
         # Memory variables
-        self.memory = StringVar()
+        self.memory = tk.StringVar()
         self.memory.set("0")
-        self.label_memory_value = Label(self.memory_frame, textvariable=self.memory)
+        self.label_memory_value = tk.Label(self.memory_frame, textvariable=self.memory)
 
         # Registers variables
-        self.registers = [IntVar()] * REG_NUMBER
+        self.registers = [tk.StringVar(), tk.StringVar(), tk.StringVar(), tk.StringVar(),
+                          tk.StringVar(), tk.StringVar(), tk.StringVar(), tk.StringVar(),
+                          tk.StringVar(), tk.StringVar(), tk.StringVar(), tk.StringVar(),
+                          tk.StringVar(), tk.StringVar(), tk.StringVar(), tk.StringVar()]
         self.clear_registers()
-        self.label_r0_value = Label(self.registers_data_frame, textvariable=self.registers[0])
-        self.label_r1_value = Label(self.registers_data_frame, textvariable=self.registers[1])
-        self.label_r2_value = Label(self.registers_data_frame, textvariable=self.registers[2])
-        self.label_r3_value = Label(self.registers_data_frame, textvariable=self.registers[3])
-        self.label_r4_value = Label(self.registers_data_frame, textvariable=self.registers[4])
-        self.label_r5_value = Label(self.registers_data_frame, textvariable=self.registers[5])
-        self.label_r6_value = Label(self.registers_data_frame, textvariable=self.registers[6])
-        self.label_r7_value = Label(self.registers_data_frame, textvariable=self.registers[7])
-        self.label_r8_value = Label(self.registers_data_frame, textvariable=self.registers[8])
-        self.label_r9_value = Label(self.registers_data_frame, textvariable=self.registers[9])
-        self.label_r10_value = Label(self.registers_data_frame, textvariable=self.registers[10])
-        self.label_r11_value = Label(self.registers_data_frame, textvariable=self.registers[11])
-        self.label_r12_value = Label(self.registers_data_frame, textvariable=self.registers[12])
-        self.label_r13_value = Label(self.registers_data_frame, textvariable=self.registers[13])
-        self.label_r14_value = Label(self.registers_data_frame, textvariable=self.registers[14])
-        self.label_r15_value = Label(self.registers_data_frame, textvariable=self.registers[15])
+        self.label_r0_value = tk.Label(self.registers_data_frame, textvariable=self.registers[0])
+        self.label_r1_value = tk.Label(self.registers_data_frame, textvariable=self.registers[1])
+        self.label_r2_value = tk.Label(self.registers_data_frame, textvariable=self.registers[2])
+        self.label_r3_value = tk.Label(self.registers_data_frame, textvariable=self.registers[3])
+        self.label_r4_value = tk.Label(self.registers_data_frame, textvariable=self.registers[4])
+        self.label_r5_value = tk.Label(self.registers_data_frame, textvariable=self.registers[5])
+        self.label_r6_value = tk.Label(self.registers_data_frame, textvariable=self.registers[6])
+        self.label_r7_value = tk.Label(self.registers_data_frame, textvariable=self.registers[7])
+        self.label_r8_value = tk.Label(self.registers_data_frame, textvariable=self.registers[8])
+        self.label_r9_value = tk.Label(self.registers_data_frame, textvariable=self.registers[9])
+        self.label_r10_value = tk.Label(self.registers_data_frame, textvariable=self.registers[10])
+        self.label_r11_value = tk.Label(self.registers_data_frame, textvariable=self.registers[11])
+        self.label_r12_value = tk.Label(self.registers_data_frame, textvariable=self.registers[12])
+        self.label_r13_value = tk.Label(self.registers_data_frame, textvariable=self.registers[13])
+        self.label_r14_value = tk.Label(self.registers_data_frame, textvariable=self.registers[14])
+        self.label_r15_value = tk.Label(self.registers_data_frame, textvariable=self.registers[15])
+
+        # Buttons
+        self.step_button = ttk.Button(self.buttons_frame, text="Step", command=self.process_one_instruction)
+        self.step_button.pack()
+
+        self.close_button = ttk.Button(self.buttons_frame, text="Quit", command=parent.quit)
+        self.close_button.pack()
 
         # Widgets and layout - Instruction
-        self.instruction_frame.grid(row=0, column=0, sticky=W)
+        self.left_frame.grid(row=0, column=0, sticky=tk.W)
         self.instruction_title_frame.grid(row=0, column=0)
         self.instruction_data_frame.grid(row=1, column=0)
         self.fill_instruction_frame()
         # Widgets and layout - Memory / Registers
-        self.memory_reg_frame.grid(row=0, column=1, sticky=N)
+        self.right_frame.grid(row=0, column=1, sticky=tk.N)
         # Memory
-        self.memory_frame.grid(row=0, column=0, sticky=N)
+        self.memory_frame.grid(row=0, column=0, sticky=tk.N)
         self.memory_title_frame.grid(row=0)
         self.memory_data_frame.grid(row=1)
         self.fill_memory_frame()
         # Registers
-        self.registers_frame.grid(row=1, column=0, sticky=N)
+        self.registers_frame.grid(row=1, column=0, sticky=tk.N)
         self.registers_title_frame.grid(row=0)
         self.registers_data_frame.grid(row=1)
         self.fill_registers_frame()
+        # Buttons
+        self.buttons_frame.grid(row=2, column=0, sticky=tk.S)
+
+        self.create_bindings()
 
     # -----------
     # CLEAR VARS
@@ -123,7 +139,7 @@ class GUI:
 
     def clear_registers(self):
         for reg in self.registers:
-            reg.set(0)
+            reg.set(hex(0))
 
     # -----------
     # FRAME SETUP
@@ -131,56 +147,56 @@ class GUI:
 
     # Instruction
     def fill_instruction_frame(self):
-        label_title = Label(self.instruction_title_frame, text="Current Instruction")
-        label_title.grid(row=0, sticky=W)
+        label_title = tk.Label(self.instruction_title_frame, text="Current Instruction")
+        label_title.grid(row=0, sticky=tk.W)
         # Op Code
-        label_op_code = Label(self.instruction_data_frame, text="Op Code: ")
-        label_op_code.grid(row=1, sticky=W)
+        label_op_code = tk.Label(self.instruction_data_frame, text="Op Code: ")
+        label_op_code.grid(row=1, sticky=tk.W)
         # Cfg Mask
-        label_cfg_mask = Label(self.instruction_data_frame, text="Config: ")
-        label_cfg_mask.grid(row=2, sticky=W)
+        label_cfg_mask = tk.Label(self.instruction_data_frame, text="Config: ")
+        label_cfg_mask.grid(row=2, sticky=tk.W)
         # Type
-        label_type = Label(self.instruction_data_frame, text="Type: ")
-        label_type.grid(row=3, sticky=W)
+        label_type = tk.Label(self.instruction_data_frame, text="Type: ")
+        label_type.grid(row=3, sticky=tk.W)
         # Rd
-        label_rd = Label(self.instruction_data_frame, text="RD: ")
-        label_rd.grid(row=4, sticky=W)
+        label_rd = tk.Label(self.instruction_data_frame, text="RD: ")
+        label_rd.grid(row=4, sticky=tk.W)
         # Ra
-        label_ra = Label(self.instruction_data_frame, text="RA: ")
-        label_ra.grid(row=5, sticky=W)
+        label_ra = tk.Label(self.instruction_data_frame, text="RA: ")
+        label_ra.grid(row=5, sticky=tk.W)
         # Rb
-        label_rb = Label(self.instruction_data_frame, text="RB: ")
-        label_rb.grid(row=6, sticky=W)
+        label_rb = tk.Label(self.instruction_data_frame, text="RB: ")
+        label_rb.grid(row=6, sticky=tk.W)
         # Imma
-        label_imma = Label(self.instruction_data_frame, text="IMMA: ")
-        label_imma.grid(row=7, sticky=W)
+        label_imma = tk.Label(self.instruction_data_frame, text="IMMA: ")
+        label_imma.grid(row=7, sticky=tk.W)
         # Immb
-        label_immb = Label(self.instruction_data_frame, text="IMMB: ")
-        label_immb.grid(row=8, sticky=W)
+        label_immb = tk.Label(self.instruction_data_frame, text="IMMB: ")
+        label_immb.grid(row=8, sticky=tk.W)
         # Address
-        label_address = Label(self.instruction_data_frame, text="Address: ")
-        label_address.grid(row=9, sticky=W)
+        label_address = tk.Label(self.instruction_data_frame, text="Address: ")
+        label_address.grid(row=9, sticky=tk.W)
         # Layout of values
-        self.label_op_code_value.grid(row=1, column=1, sticky=W)
-        self.label_cfg_mask_value.grid(row=2, column=1, sticky=W)
-        self.label_type_value.grid(row=3, column=1, sticky=W)
-        self.label_rd_value.grid(row=4, column=1, sticky=W)
-        self.label_ra_value.grid(row=5, column=1, sticky=W)
-        self.label_rb_value.grid(row=6, column=1, sticky=W)
-        self.label_imma_value.grid(row=7, column=1, sticky=W)
-        self.label_immb_value.grid(row=8, column=1, sticky=W)
-        self.label_address_value.grid(row=9, column=1, sticky=W)
+        self.label_op_code_value.grid(row=1, column=1, sticky=tk.W)
+        self.label_cfg_mask_value.grid(row=2, column=1, sticky=tk.W)
+        self.label_type_value.grid(row=3, column=1, sticky=tk.W)
+        self.label_rd_value.grid(row=4, column=1, sticky=tk.W)
+        self.label_ra_value.grid(row=5, column=1, sticky=tk.W)
+        self.label_rb_value.grid(row=6, column=1, sticky=tk.W)
+        self.label_imma_value.grid(row=7, column=1, sticky=tk.W)
+        self.label_immb_value.grid(row=8, column=1, sticky=tk.W)
+        self.label_address_value.grid(row=9, column=1, sticky=tk.W)
 
     # Memory
     def fill_memory_frame(self):
-        label_title = Label(self.memory_title_frame, text="Memory Representation")
+        label_title = tk.Label(self.memory_title_frame, text="Memory Representation")
         label_title.grid(row=0)
         # Memory
-        self.label_memory_value.grid(row=1, column=0, sticky=N)
+        self.label_memory_value.grid(row=1, column=0, sticky=tk.N)
 
     # Registers
     def fill_registers_frame(self):
-        label_title = Label(self.registers_title_frame, text="Registers")
+        label_title = tk.Label(self.registers_title_frame, text="Registers")
         label_title.grid(column=2)
         # Registers - 0 to 3
         self.label_r0_value.grid(row=1, column=0)
@@ -207,33 +223,62 @@ class GUI:
     def process_one_instruction(self):
         self.simulator.process_one_instruction()
         self.display_instruction(self.simulator.current_instruction)
-        print(self.simulator.memory)
-        self.simulator.print_registers()
+        self.display_registers()
+        self.display_memory()
 
     def display_instruction(self, instruction):
         self.clear_instruction()
-        self.op_code = instruction.op_str()
-        self.cfg_mask = instruction.cfg_str()
-        self.type = instruction.type_str()
-        self.rd = str(instruction.rd)
-
+        self.op_code.set(instruction.op_str())
+        self.cfg_mask.set(instruction.cfg_str())
+        self.type.set(instruction.type_str())
+        self.rd.set(str(instruction.rd))
+        # LOAD
         if instruction.op_code == OP_LOAD:
-            if instruction.cfg_mask ==
-
-        elif instruction.
-        self.ra = instruction.ra
-        self.rb = instruction.rb
-        self.imma = instruction.imma
-        self.immb = instruction.immb
-        self.address = instruction.address
+            if instruction.cfg_mask == LOAD_ADR:
+                self.address.set(str(instruction.address))
+            elif instruction.cfg_mask == LOAD_RAA:
+                self.ra.set(str(instruction.ra))
+            elif instruction.cfg_mask == LOAD_REG:
+                self.ra.set(str(instruction.ra))
+            elif instruction.cfg_mask == LOAD_IMM:
+                self.imma.set(str(instruction.imma))
+        # STORE
+        elif instruction.op_code == OP_STORE:
+            if instruction.cfg_mask == STORE_ADR:
+                self.address.set(str(instruction.address))
+            elif instruction.cfg_mask == STORE_RAA:
+                self.ra.set(str(instruction.ra))
+        # NOT
+        elif instruction.op_code == OP_NOT:
+            self.ra.set(str(instruction.ra))
+        # JMP
+        elif instruction.op_code == OP_JMP:
+            self.address.set(str(instruction.address))
+        # BINARY OPERATION
+        else:
+            if instruction.cfg_mask == CFG_RR:
+                self.ra.set(str(instruction.ra))
+                self.rb.set(str(instruction.rb))
+            elif instruction.cfg_mask == CFG_RI:
+                self.ra.set(str(instruction.ra))
+                self.immb.set(str(instruction.immb))
+            elif instruction.cfg_mask == CFG_IR:
+                self.imma.set(str(instruction.imma))
+                self.rb.set(str(instruction.rb))
+            elif instruction.cfg_mask == CFG_II:
+                self.imma.set(str(instruction.imma))
+                self.immb.set(str(instruction.immb))
 
     def display_memory(self):
-        pass
+        self.memory.set(hex(self.simulator.memory.raw_memory))
 
     def display_registers(self):
-        pass
+        for reg in self.simulator.registers:
+            self.registers[reg.number].set(hex(reg.value))
+
 
 if __name__ == "__main__":
-    root = Tk()
-    my_gui = GUI(root, "../sdvc/bin/adding.6.out")
+    root = tk.Tk()
+    my_gui = GUI(root, bin_file="../sdve-beem-benchmark/bin/adding.6.out")
+    my_gui.simulator.memory = Memory(128, 0x22221111333333332222222211111111)
     root.mainloop()

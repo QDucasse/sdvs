@@ -207,7 +207,7 @@ class ASM:
     def process_store(self, arguments, bit_instruction):
         """
         Process STORE operation.
-        ex: store r4 256
+        ex: store r4 256#
         """
         # Process the arguments
         if len(arguments) != 3:
