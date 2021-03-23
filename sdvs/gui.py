@@ -31,10 +31,10 @@ class GUI:
         self.simulator = Simulator(Decoder(bin_instructions), memory)
 
         # Frame definitions
-        self.left_frame = tk.Frame(parent)  # top left
+        self.left_frame = tk.Frame(parent, width=100)  # top left
         self.instruction_title_frame = tk.Frame(self.left_frame)
         self.instruction_data_frame = tk.Frame(self.left_frame)
-        self.right_frame = tk.Frame(parent)  # top right
+        self.right_frame = tk.Frame(parent, width=200)  # top right
         self.memory_frame = tk.Frame(self.right_frame)  # top memory
         self.memory_title_frame = tk.Frame(self.memory_frame)
         self.memory_data_frame = tk.Frame(self.memory_frame)
@@ -44,6 +44,7 @@ class GUI:
         self.buttons_frame = tk.Frame(self.right_frame)
 
         # Instruction Variables
+        self.pc = tk.StringVar()
         self.op_code = tk.StringVar()
         self.cfg_mask = tk.StringVar()
         self.rd = tk.StringVar()
@@ -55,6 +56,7 @@ class GUI:
         self.type = tk.StringVar()
         self.clear_instruction()
         # Instruction Values
+        self.label_pc_value = tk.Label(self.instruction_data_frame, textvariable=self.pc)
         self.label_op_code_value = tk.Label(self.instruction_data_frame, textvariable=self.op_code)
         self.label_cfg_mask_value = tk.Label(self.instruction_data_frame, textvariable=self.cfg_mask)
         self.label_type_value = tk.Label(self.instruction_data_frame, textvariable=self.type)
@@ -153,43 +155,47 @@ class GUI:
     def fill_instruction_frame(self):
         label_title = tk.Label(self.instruction_title_frame, text="Current Instruction")
         label_title.grid(row=0, sticky=tk.W)
+        # PC
+        label_pc = tk.Label(self.instruction_data_frame, text="PC: ")
+        label_pc.grid(row=1, sticky=tk.W)
         # Op Code
         label_op_code = tk.Label(self.instruction_data_frame, text="Op Code: ")
-        label_op_code.grid(row=1, sticky=tk.W)
+        label_op_code.grid(row=2, sticky=tk.W)
         # Cfg Mask
         label_cfg_mask = tk.Label(self.instruction_data_frame, text="Config: ")
-        label_cfg_mask.grid(row=2, sticky=tk.W)
+        label_cfg_mask.grid(row=3, sticky=tk.W)
         # Type
         label_type = tk.Label(self.instruction_data_frame, text="Type: ")
-        label_type.grid(row=3, sticky=tk.W)
+        label_type.grid(row=4, sticky=tk.W)
         # Rd
         label_rd = tk.Label(self.instruction_data_frame, text="RD: ")
-        label_rd.grid(row=4, sticky=tk.W)
+        label_rd.grid(row=5, sticky=tk.W)
         # Ra
         label_ra = tk.Label(self.instruction_data_frame, text="RA: ")
-        label_ra.grid(row=5, sticky=tk.W)
+        label_ra.grid(row=6, sticky=tk.W)
         # Rb
         label_rb = tk.Label(self.instruction_data_frame, text="RB: ")
-        label_rb.grid(row=6, sticky=tk.W)
+        label_rb.grid(row=7, sticky=tk.W)
         # Imma
         label_imma = tk.Label(self.instruction_data_frame, text="IMMA: ")
-        label_imma.grid(row=7, sticky=tk.W)
+        label_imma.grid(row=8, sticky=tk.W)
         # Immb
         label_immb = tk.Label(self.instruction_data_frame, text="IMMB: ")
-        label_immb.grid(row=8, sticky=tk.W)
+        label_immb.grid(row=9, sticky=tk.W)
         # Address
         label_address = tk.Label(self.instruction_data_frame, text="Address: ")
-        label_address.grid(row=9, sticky=tk.W)
+        label_address.grid(row=10, sticky=tk.W)
         # Layout of values
-        self.label_op_code_value.grid(row=1, column=1, sticky=tk.W)
-        self.label_cfg_mask_value.grid(row=2, column=1, sticky=tk.W)
-        self.label_type_value.grid(row=3, column=1, sticky=tk.W)
-        self.label_rd_value.grid(row=4, column=1, sticky=tk.W)
-        self.label_ra_value.grid(row=5, column=1, sticky=tk.W)
-        self.label_rb_value.grid(row=6, column=1, sticky=tk.W)
-        self.label_imma_value.grid(row=7, column=1, sticky=tk.W)
-        self.label_immb_value.grid(row=8, column=1, sticky=tk.W)
-        self.label_address_value.grid(row=9, column=1, sticky=tk.W)
+        self.label_pc_value.grid(row=1, column=1, sticky=tk.W)
+        self.label_op_code_value.grid(row=2, column=1, sticky=tk.W)
+        self.label_cfg_mask_value.grid(row=3, column=1, sticky=tk.W)
+        self.label_type_value.grid(row=4, column=1, sticky=tk.W)
+        self.label_rd_value.grid(row=5, column=1, sticky=tk.W)
+        self.label_ra_value.grid(row=6, column=1, sticky=tk.W)
+        self.label_rb_value.grid(row=7, column=1, sticky=tk.W)
+        self.label_imma_value.grid(row=8, column=1, sticky=tk.W)
+        self.label_immb_value.grid(row=9, column=1, sticky=tk.W)
+        self.label_address_value.grid(row=10, column=1, sticky=tk.W)
 
     # Memory
     def fill_memory_frame(self):
@@ -233,6 +239,7 @@ class GUI:
 
     def display_instruction(self, instruction):
         self.clear_instruction()
+        self.pc.set(str(self.simulator.decoder.next_instruction_index))
         self.op_code.set(instruction.op_str())
         self.cfg_mask.set(instruction.cfg_str())
         self.type.set(instruction.type_str())
@@ -347,5 +354,6 @@ class GUI:
 if __name__ == "__main__":
     root = tk.Tk()
     my_gui = GUI(root, bin_file="../sdve-beem-benchmark/bin/adding.6.out")
+    print(my_gui.simulator.decoder.bit_instructions)
     my_gui.simulator.memory = Memory(128, 0x22221111333333332222222200000001)
     root.mainloop()

@@ -32,7 +32,20 @@ class BinaryReader:
             content = int.from_bytes(file.read(), "big")
         return content
 
+    @classmethod
+    def write_text_file(cls, file_name, instructions):
+        """
+        Write the result in a one instruction per line
+        :param file_name:
+        :return:
+        """
+        hex_instructions = ["{0:0{1}X}".format(instruction, 8) for instruction in instructions]
+        with open(file_name, "w") as file:
+            file.write("\n".join(hex_instructions))
+
 
 if __name__ == "__main__":
     bin_instructions = BinaryReader.read_instructions("../sdve-beem-benchmark/bin/adding.6.out")
-    print(bin_instructions)
+    hex_instructions = [hex(instruction) for instruction in bin_instructions]
+    print("\n".join(hex_instructions))
+    BinaryReader.write_text_file("../sdvu/cfg/prg_mem.ini", bin_instructions)

@@ -23,10 +23,10 @@ class Register:
 
 class Simulator:
 
-    def __init__(self, decoder, memory):
+    def __init__(self, decoder, cfg_memory):
         self.decoder = decoder
         self.current_instruction = None
-        self.memory = memory
+        self.memory = cfg_memory
         self.registers = []
         for i in range(REG_NUMBER):
             self.registers.append(Register(i, REG_SIZE))
@@ -177,7 +177,7 @@ class Simulator:
         Change the decoder current instruction to the given one if the
         condition in rd is true
         """
-        if self.retrieve_register_value(self.current_instruction.rd):
+        if self.retrieve_register_value(self.current_instruction.rd) == 0:
             self.decoder.next_instruction_index = self.current_instruction.address // INSTRUCTION_SIZE
 
     def process_store(self):
