@@ -355,5 +355,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     my_gui = GUI(root, bin_file="../sdve-beem-benchmark/bin/adding.6.out")
     print(my_gui.simulator.decoder.bit_instructions)
-    my_gui.simulator.memory = Memory(128, 0x22221111333333332222222200000001)
+    my_gui.simulator.memory = Memory(256, 0x00000000000000000AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)
     root.mainloop()

@@ -1,43 +1,12 @@
-# sdvs
+# Simple DiVine Simulator (SDVS)
 
-<!-- [![Pipeline][pipeline-badge]][pipeline-link]
-[![Coverage][coverage-badge]][coverage-link]
-[![Documentation][documentation-badge]][documentation-link]
-[![PyPI][pypi-badge]][pypi-link] -->
+The Simple DiVine Simulator (SDVS) simulates the behavior of the processing unit ([SDVU](https://github.com/QDucasse/sdvu)) and was used to co-design this processing unit and check the correct processing of instructions. It provides a way to understand instructions compiled by the compiler ([SDVC](https://github.com/QDucasse/sdvc)). The ISA is presented [here](https://github.com/QDucasse/sdvc/blob/main/docs/isa.md) and is handmade to fit the language the best. The language itself is a transformation of DiVinE to a single static assignment form (Simple DiVinE).
 
-[pipeline-badge]: https://github.com/QDucasse/sdvs/badges/master/pipeline.svg
-[pipeline-link]: https://github.com/QDucasse/sdvs/pipelines
-[coverage-badge]: https://github.com/QDucasse/sdvs/badges/master/coverage.svg
-[coverage-link]: https://github.com/QDucasse/sdvs/-/jobs
-[documentation-badge]: https://readthedocs.org/projects/sdvs/badge/?version=stable
-[documentation-link]: http://sdvs.readthedocs.org/stable/
-[pypi-badge]: https://img.shields.io/pypi/v/sdvs.svg
-[pypi-link]: https://pypi.python.org/pypi/sdvs
+### Installation and Usage
 
-## Features
+The simulator uses a basic `tkinter` GUI to present instructions one by one along with the state of the memory and registers. It can be launched by specifying the binary and configuration to use through the GUI.
 
-## Objectives
 
-## Technical requirements
 
-Below is the list of currently supported Python releases:
+![](docs/gui_example.png)
 
-| # | Python |
-|---|--------|
-| 1 | 3.7    |
-| 2 | 3.8    |
-| 3 | 3.9    |
-
-## Code and contribution
-
-The code is open source and released under the [MIT License (MIT)][mit-license]. It is available on [Github][gitlab] and follows the guidelines about [Semantic Versioning][semver] for transparency within the release cycle and backward compatibility whenever possible.
-
-All contributions are welcome, whether bug reports, code contributions and reviews, documentation or feature requests.
-
-[mit-license]: https://en.wikipedia.org/wiki/MIT_License
-[github]: https://github.com/QDucasse/sdvs
-[semver]: http://semver.org/
-
-## Installation
-
-## Usage
