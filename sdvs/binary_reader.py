@@ -20,6 +20,7 @@ class BinaryReader:
             while instruction:
                 instructions.append(int.from_bytes(instruction, "little"))
                 instruction = file.read(4)
+        instructions.append(0x00000000)
         return instructions
 
     @classmethod
@@ -36,6 +37,7 @@ class BinaryReader:
     def write_text_file(cls, file_name, instructions):
         """
         Write the result in a one instruction per line
+        :param instructions:
         :param file_name:
         :return:
         """

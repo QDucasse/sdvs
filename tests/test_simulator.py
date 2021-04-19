@@ -14,7 +14,7 @@ from asm import ASM
 from constants import *
 from decoder import Decoder, Instruction
 from memory import Memory
-from simulator import Simulator
+from core import Core
 
 # Instructions file setup
 ADD_INDEX = 0
@@ -101,7 +101,7 @@ class TestSimulator(unittest.TestCase):
         bit_instructions = asm.process_file("path/to/mock/file")
         decoder = Decoder(bit_instructions)
         memory = Memory(0, 0)
-        self.simulator = Simulator(decoder, memory)
+        self.simulator = Core(decoder, memory)
 
     def testAssignRegisterValue(self):
         for reg in self.simulator.registers:

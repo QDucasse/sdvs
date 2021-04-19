@@ -13,7 +13,7 @@ from binary_reader import BinaryReader
 from constants import *
 from decoder import Decoder
 from memory import Memory
-from simulator import Simulator
+from core import Core
 
 
 class GUI:
@@ -28,7 +28,7 @@ class GUI:
         if mem_file and os.path.exists(mem_file):
             raw_memory = BinaryReader.read_memory(mem_file)
             memory = Memory(raw_memory.bit_length(), raw_memory)
-        self.simulator = Simulator(Decoder(bin_instructions), memory)
+        self.simulator = Core(Decoder(bin_instructions), memory)
 
         # Frame definitions
         self.left_frame = tk.Frame(parent, width=100)  # top left

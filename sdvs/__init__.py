@@ -9,4 +9,4 @@ from decoder import *
 from gui import *
 from memory import *
 from sdvs import *
-from simulator import *
+from core import *

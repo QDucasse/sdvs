@@ -27,7 +27,9 @@ class Instruction:
         OP_NOT: "OP_NOT",
         OP_JMP: "OP_JMP",
         OP_STORE: "OP_STORE",
-        OP_LOAD: "OP_LOAD"
+        OP_LOAD: "OP_LOAD",
+        OP_NOP: "OP_NOP",
+        OP_ENDGA: "OP_ENDGA"
     }
 
     BIN_CFG_STR = {
@@ -82,7 +84,7 @@ class Instruction:
                 self.type == other.type)
 
     def __str__(self):
-        return "Instruction {}".format(self.op_str)
+        return "Instruction {}".format(self.op_str())
 
     def op_str(self):
         return self.OP_CODES_STR[self.op_code]
