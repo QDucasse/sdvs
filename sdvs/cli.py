@@ -7,6 +7,10 @@
 # Command Line Interface: Command-line arguments parser and routine.
 
 import argparse
+import subprocess
+
+from memory import Memory
+from simulator import Simulator
 
 
 class Parser(argparse.ArgumentParser):
@@ -19,9 +23,12 @@ class Parser(argparse.ArgumentParser):
         """
         Define arguments to parse.
         """
-        self.add_argument("--step", "-s", action="store_true", help="Trigger step execution.")
-        self.add_argument("--bin", "-b", help="Binary location")
-        self.add_argument("--gui", "-g", action="store_true", help="Trigger GUI")
+        self.add_argument("--source", "-s", help="SDVE model source file.")
+        self.add_argument("--compiler", "-c", default="/usr/bin/sdvc", help="SDVC path.")
+        self.add_argument("--ncores", "-n", help="Number of cores.")
+        self.add_argument("--gui", "-g", default=False, action="store_true", help="Trigger the GUI.")
+        self.add_argument("--cfgsize", help="Size of the config.")
+        self.add_argument("--cfg", help="Config itself.")
 
 
     def parse(self, args):
@@ -67,5 +74,23 @@ class CLI:
         self.args = ObjDict(args.__dict__)
 
     def main(self):
-        # Use arguments to trigger simulation
-        pass
+        if self.args.gui:
+            if self.args.ncores == 1:
+                pass # Process GUI
+            else:
+                pass # Print issue
+        else: # No GUI
+            # Compile file
+            subprocess.check_output([self.args.compiler, "-v",
+                                                         "-c", self.args.source,
+                                                         "-o", "sim/a.out",
+                                                         "-n", self.args.ncores
+                                      ])
+            binaries = ["sim/a.out." + str(i) for i in range(int(self.args.ncores))]
+            simulator = Simulator(binaries)
+            cfg = Memory(int(self.args.cfgsize), int(self.args.cfg))
+            print(simulator.launch_checking(cfg))
+
+
+
+

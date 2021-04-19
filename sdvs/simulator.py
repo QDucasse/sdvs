@@ -31,10 +31,15 @@ class Simulator:
         max_time, cfgs = self.coordinator.process_config(cfg_memory)
         self.exec_time += max_time
         # Check returned configs
-        for cfg in cfgs:
-            self.checker.check_config(cfg)
+        print("Obtained configs: [")
+        for config in cfgs:
+            print(hex(config))
+            self.checker.check_config(config)
+        print("]")
 
     def launch_checking(self, init_cfg):
+        print("Checking config " + str(hex(init_cfg.raw_memory)))
+        self.checker.known[init_cfg.raw_memory] = 1
         self.process_config(init_cfg)
         while not self.checker.last:
             new_config = self.checker.next_config()
@@ -49,5 +54,5 @@ if __name__ == "__main__":
         "../../sdvu/cfg/adding.6.out.2"
     ]
     simulator = Simulator(binaries)
-    cfg = Memory(128, 0x00010001000000010000000100000001)
+    cfg = Memory(128, 0x00000001)
     print(simulator.launch_checking(cfg))

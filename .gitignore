@@ -17,3 +17,5 @@ htmlcov/
 
 # Binary to test
 bin_tests/
+sim/
+!sim/README.md
