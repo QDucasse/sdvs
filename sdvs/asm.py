@@ -224,6 +224,18 @@ class ASM:
         bit_instruction |= extract_number(lh)
         return bit_instruction
 
+    def process_nop(self, arguments, bit_instruction):
+        """
+        Process NOP operation.
+        """
+        return bit_instruction
+
+    def process_endga(self, arguments, bit_instruction):
+        """
+        Process ENDGA operation.
+        """
+        return bit_instruction
+
     OP_CODES = {
         "add": (OP_ADD, process_binary),
         "sub": (OP_SUB, process_binary),
@@ -245,5 +257,7 @@ class ASM:
         "loadbyte": (OP_LOAD, process_load),
         "loadint": (OP_LOAD, process_load),
         "loadstate": (OP_LOAD, process_load),
-        "mov": (OP_LOAD, process_mov)
+        "mov": (OP_LOAD, process_mov),
+        "nop": (OP_NOP, process_nop),
+        "endga": (OP_ENDGA, process_endga)
     }

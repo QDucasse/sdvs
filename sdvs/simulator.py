@@ -170,14 +170,14 @@ class Simulator:
         Assign not(ra) in the destination register
         """
         self.assign_register_value(self.current_instruction.rd,
-                                   bool_to_int(not(self.retrieve_register_value(self.current_instruction.ra))))
+                                   bool_to_int(not (self.retrieve_register_value(self.current_instruction.ra))))
 
     def process_jmp(self):
         """
         Change the decoder current instruction to the given one if the
         condition in rd is true
         """
-        if self.retrieve_register_value(self.current_instruction.rd) == 0:
+        if self.retrieve_register_value(self.current_instruction.rd) != 0:
             self.decoder.next_instruction_index = self.current_instruction.address // INSTRUCTION_SIZE
 
     def process_store(self):
@@ -223,6 +223,13 @@ class Simulator:
         elif self.current_instruction.cfg_mask == LOAD_IMM:
             self.assign_register_value(self.current_instruction.rd, self.current_instruction.imma)
 
+    def process_endga(self):
+        """
+        Return the stored config memory
+        :return:
+        """
+        pass
+
     PROCESS_FUNCTIONS = {
         OP_ADD: process_add,
         OP_SUB: process_sub,
@@ -237,7 +244,8 @@ class Simulator:
         OP_NOT: process_not,
         OP_JMP: process_jmp,
         OP_STORE: process_store,
-        OP_LOAD: process_load
+        OP_LOAD: process_load,
+        OP_ENDGA: process_endga
     }
 
     def process_instructions(self):
@@ -257,9 +265,8 @@ if __name__ == "__main__":
     from binary_reader import BinaryReader
     from decoder import Decoder
     from memory import Memory
+
     bin_instructions = BinaryReader.read_instructions("../sdve-beem-benchmark/bin/adding.6.out")
     memory = Memory(128, 0x22221111333333332222222200000001)
     simulator = Simulator(Decoder(bin_instructions), memory)
     simulator.process_instructions()
-
-

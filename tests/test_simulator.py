@@ -42,7 +42,8 @@ STORESTATE_INDEX = 58
 binops = ["add", "sub", "mul", "div", "mod",
           "and", "or", "lt", "gt", "eq"]
 
-mock_file = """not r3 r1
+mock_file = """
+not r3 r1
 jmp r3 32
 mov r3 r1
 mov r3 234
@@ -442,51 +443,51 @@ class TestSimulator(unittest.TestCase):
         self.simulator.registers[1].value = 1
         self.simulator.registers[2].value = 2
         self.simulator.process_and()
-        self.assertEqual(1 and 2, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessAndRI(self):
         self.simulator.decoder.next_instruction_index = AND_INDEX + 1
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.registers[1].value = 1
         self.simulator.process_and()
-        self.assertEqual(1 and 122, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessAndIR(self):
         self.simulator.decoder.next_instruction_index = AND_INDEX + 2
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.registers[2].value = 2
         self.simulator.process_and()
-        self.assertEqual(122 and 2, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessAndII(self):
         self.simulator.decoder.next_instruction_index = AND_INDEX + 3
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.process_and()
-        self.assertEqual(123 and 124, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOneInstructionAndRR(self):
         self.simulator.decoder.next_instruction_index = AND_INDEX
         self.simulator.registers[1].value = 1
         self.simulator.registers[2].value = 2
         self.simulator.process_one_instruction()
-        self.assertEqual(1 and 2, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOneInstructionAndRI(self):
         self.simulator.decoder.next_instruction_index = AND_INDEX + 1
         self.simulator.registers[1].value = 1
         self.simulator.process_one_instruction()
-        self.assertEqual(1 and 122, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOneInstructionAndIR(self):
         self.simulator.decoder.next_instruction_index = AND_INDEX + 2
         self.simulator.registers[2].value = 2
         self.simulator.process_one_instruction()
-        self.assertEqual(122 and 2, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOneInstructionAndII(self):
         self.simulator.decoder.next_instruction_index = AND_INDEX + 3
         self.simulator.process_one_instruction()
-        self.assertEqual(123 and 124, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     # --------------
     # OR OPERATIONS
@@ -498,51 +499,51 @@ class TestSimulator(unittest.TestCase):
         self.simulator.registers[1].value = 1
         self.simulator.registers[2].value = 2
         self.simulator.process_or()
-        self.assertEqual(1 or 2, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOrRI(self):
         self.simulator.decoder.next_instruction_index = OR_INDEX + 1
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.registers[1].value = 1
         self.simulator.process_or()
-        self.assertEqual(1 or 122, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOrIR(self):
         self.simulator.decoder.next_instruction_index = OR_INDEX + 2
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.registers[2].value = 2
         self.simulator.process_or()
-        self.assertEqual(122 or 2, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOrII(self):
         self.simulator.decoder.next_instruction_index = OR_INDEX + 3
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.process_or()
-        self.assertEqual(123 or 124, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOneInstructionOrRR(self):
         self.simulator.decoder.next_instruction_index = OR_INDEX
         self.simulator.registers[1].value = 1
         self.simulator.registers[2].value = 2
         self.simulator.process_one_instruction()
-        self.assertEqual(1 or 2, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOneInstructionOrRI(self):
         self.simulator.decoder.next_instruction_index = OR_INDEX + 1
         self.simulator.registers[1].value = 1
         self.simulator.process_one_instruction()
-        self.assertEqual(1 or 122, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOneInstructionOrIR(self):
         self.simulator.decoder.next_instruction_index = OR_INDEX + 2
         self.simulator.registers[2].value = 2
         self.simulator.process_one_instruction()
-        self.assertEqual(122 or 2, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     def testProcessOneInstructionOrII(self):
         self.simulator.decoder.next_instruction_index = OR_INDEX + 3
         self.simulator.process_one_instruction()
-        self.assertEqual(123 or 124, self.simulator.registers[3].value)
+        self.assertEqual(1, self.simulator.registers[3].value)
 
     # --------------
     # LT OPERATIONS

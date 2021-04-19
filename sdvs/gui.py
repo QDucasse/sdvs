@@ -354,6 +354,6 @@ class GUI:
 if __name__ == "__main__":
     root = tk.Tk()
     my_gui = GUI(root, bin_file="../sdve-beem-benchmark/bin/adding.6.out")
-    print(my_gui.simulator.decoder.bit_instructions)
-    my_gui.simulator.memory = Memory(256, 0x00000000000000000AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)
+    print([hex(elt) for elt in my_gui.simulator.decoder.bit_instructions])
+    my_gui.simulator.memory = Memory(256, 0x0000000000000000000000000000000000010001000000050000000400000003)
     root.mainloop()
