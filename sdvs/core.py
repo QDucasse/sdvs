@@ -67,7 +67,7 @@ class Core:
         # Execute
         self.PROCESS_FUNCTIONS[self.current_instruction.op_code](self)
         # Count cycles
-        self.executed_cycles += self.INSTR_CYCLES[self.current_instruction.op_code]
+        self.add_exec_cycles()
 
 
 
@@ -255,18 +255,27 @@ class Core:
         self.idle = True
 
     def process_instructions(self):
+        self.executed_cycles += 2  # Reset routine (2)
         while not self.idle:
+            self.executed_cycles += 4  # fetch (2) and decode (2)
             self.process_one_instruction()
-        #     print("Working")
-        # print("Idle")
-        # print(self.new_configs)
-        # print("Executed {} cycles".format(self.executed_cycles))
 
     def print_registers(self):
         print("Registers State:")
         for reg in self.registers:
             print("R{}: {}".format(reg.number, hex(reg.value)))
         print("----------------")
+
+    def add_exec_cycles(self):
+        if self.current_instruction.op_code != OP_LOAD:
+            self.executed_cycles += self.INSTR_CYCLES[self.current_instruction.op_code]
+        else:
+            if self.current_instruction.cfg_mask == LOAD_ADR:
+                self.executed_cycles += 2
+            elif self.current_instruction.cfg_mask == LOAD_RAA:
+                self.executed_cycles += 3
+            else:
+                self.executed_cycles += 1
 
     PROCESS_FUNCTIONS = {
         OP_ADD: process_add,
@@ -298,12 +307,11 @@ class Core:
         OP_LT: 3,
         OP_GT: 3,
         OP_EQ: 3,
-        OP_NOT: 3,
-        OP_JMP: 3,
-        OP_STORE: 3,
-        OP_LOAD: 3,
-        OP_ENDGA: 3,
-        OP_NOP: 3
+        OP_NOT: 1,
+        OP_JMP: 2,
+        OP_STORE: 2,
+        OP_ENDGA: 1,
+        OP_NOP: 1
     }
 
 

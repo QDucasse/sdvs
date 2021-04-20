@@ -78,7 +78,7 @@ class CLI:
             if self.args.ncores == 1:
                 pass # Process GUI
             else:
-                pass # Print issue
+                print("GUI is not available with more than one core.")
         else: # No GUI
             # Compile file
             subprocess.check_output([self.args.compiler, "-v",
