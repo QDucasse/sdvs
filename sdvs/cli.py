@@ -27,8 +27,7 @@ class Parser(argparse.ArgumentParser):
         self.add_argument("--compiler", "-c", default="/usr/bin/sdvc", help="SDVC path.")
         self.add_argument("--ncores", "-n", help="Number of cores.")
         self.add_argument("--gui", "-g", default=False, action="store_true", help="Trigger the GUI.")
-        self.add_argument("--cfgsize", help="Size of the config.")
-        self.add_argument("--cfg", help="Config itself.")
+        self.add_argument("--outputfile", "-o", default="execstats.csv", help="CSV file to store the results")
 
 
     def parse(self, args):
@@ -81,15 +80,31 @@ class CLI:
                 print("GUI is not available with more than one core.")
         else: # No GUI
             # Compile file
-            subprocess.check_output([self.args.compiler, "-v",
-                                                         "-c", self.args.source,
-                                                         "-o", "sim/a.out",
-                                                         "-n", self.args.ncores
-                                      ])
-            binaries = ["sim/a.out." + str(i) for i in range(int(self.args.ncores))]
-            simulator = Simulator(binaries)
-            cfg = Memory(int(self.args.cfgsize), int(self.args.cfg))
-            print(simulator.launch_checking(cfg))
+            subprocess.run([self.args.compiler, "-c", self.args.source, "-o", "bin/a.out", "-n", self.args.ncores])
+            # Setup simulator
+
+            binaries = ["bin/a.out." + str(i) for i in range(int(self.args.ncores))]
+            with open(self.args.source[:-5]+".cfg", "r") as f:
+                init_cfg = f.readline().strip()
+            simulator = Simulator(binaries, len(init_cfg)*4)
+            # Launch checking with initial config
+            exec_time, cfgs = simulator.launch_checking(int(init_cfg, 16))
+            # Print and write results
+            print("Model executed for {} cycles.".format(exec_time))
+            print("{} configs encountered:".format(len(cfgs)))
+            for cfg in cfgs:
+                print(hex(cfg))
+
+            model_name = self.args.source.split("/")[-1][:-5]
+            # Model name, nb of cores, init config,nb of cycles, nb of cfgs
+            fields = [model_name, self.args.ncores, str(exec_time), str(len(cfgs))]
+
+            import csv
+            with open(self.args.outputfile, "a") as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerow(fields)
+
+
 
 
 

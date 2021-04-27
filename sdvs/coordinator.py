@@ -8,21 +8,24 @@
 
 from constants import *
 from core import Core
+from memory import Memory
 
 
 class Coordinator:
 
-    def __init__(self, decoders):
+    def __init__(self, decoders, cfg_size):
+        self.cfg_size = cfg_size
         self.cores = []
-        for decoder in decoders:
-            self.cores.append(Core(decoder))
+        for i, decoder in enumerate(decoders):
+            self.cores.append(Core(decoder, i))
         self.executed_cycles = 0
 
     def process_config(self, config):
         max_exec_time = 0
         new_configs = []
         for core in self.cores:
-            core.setup_cfg_memory(config)
+            core.reset_execution()
+            core.setup_cfg_memory(Memory(self.cfg_size, config))
             core.process_instructions()
             new_configs += core.new_configs
             max_exec_time = max(core.executed_cycles, max_exec_time)
@@ -39,10 +42,9 @@ if __name__ == "__main__":
     decoder0 = Decoder(bin_instructions0)
     decoder1 = Decoder(bin_instructions1)
     decoder2 = Decoder(bin_instructions2)
-    init_cfg = Memory(128, 0x00010001000000010000000100000001)
     add_decoders = [decoder0, decoder1, decoder2]
-    coordinator = Coordinator(add_decoders)
-    max_time, cfgs = coordinator.process_config(init_cfg)
+    coordinator = Coordinator(add_decoders, 128)
+    max_time, cfgs = coordinator.process_config(0x00010001000000010000000100000001)
 
     print(max_time)
     print(cfgs)

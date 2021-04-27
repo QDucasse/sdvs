@@ -15,7 +15,5 @@ dist/
 .tox/
 htmlcov/
 
-# Binary to test
-bin_tests/
-sim/
-!sim/README.md
+bin/
+!bin/README.md

@@ -7,7 +7,7 @@
 # Simulator: Process instructions one by one and show the results of their execution
 
 from constants import *
-
+import copy
 
 def bool_to_int(boolean):
     return 1 if boolean else 0
@@ -23,7 +23,8 @@ class Register:
 
 class Core:
 
-    def __init__(self, decoder):
+    def __init__(self, decoder, nb):
+        self.nb = nb
         self.decoder = decoder
         self.current_instruction = None
         self.memory = None
@@ -40,7 +41,11 @@ class Core:
         self.reset_cfg_memory()
 
     def reset_cfg_memory(self):
-        self.memory = self.init_memory
+        self.memory = copy.deepcopy(self.init_memory)
+
+    def reset_execution(self):
+        self.idle = False
+        self.decoder.next_instruction_index = 0
 
     def assign_register_value(self, number, value):
         """
@@ -62,14 +67,13 @@ class Core:
         """
         Decode the next instruction and dispatch the process function
         """
+        # print("Core {} INIT MEMORY IS: {}".format(self.nb, hex(self.memory.raw_memory)))
         # Decode
         self.current_instruction = self.decoder.decode_next()
         # Execute
         self.PROCESS_FUNCTIONS[self.current_instruction.op_code](self)
         # Count cycles
         self.add_exec_cycles()
-
-
 
     def process_binary_operands(self):
         """
@@ -246,6 +250,7 @@ class Core:
         :return:
         """
         self.new_configs.append(self.memory.raw_memory)
+        self.reset_cfg_memory()
 
     def process_nop(self):
         """
@@ -324,6 +329,6 @@ if __name__ == "__main__":
     for instr in bin_instructions:
         print(hex(instr))
     memory = Memory(128, 0x22221111333333332222222200000001)
-    simulator = Core(Decoder(bin_instructions))
+    simulator = Core(Decoder(bin_instructions), 2, 128)
     simulator.setup_cfg_memory(memory)
     simulator.process_instructions()

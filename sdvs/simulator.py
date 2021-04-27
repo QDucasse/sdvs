@@ -16,35 +16,39 @@ from memory import Memory
 
 class Simulator:
 
-    def __init__(self, bin_paths):
+    def __init__(self, bin_paths, cfg_size):
         decoders = []
         for binary in bin_paths:
             bin_instr = BinaryReader.read_instructions(binary)
             decoder = Decoder(bin_instr)
             decoders.append(decoder)
-        self.coordinator = Coordinator(decoders)
+        self.coordinator = Coordinator(decoders, cfg_size)
         self.checker = Checker()
         self.exec_time = 0
 
-    def process_config(self, cfg_memory):
+    def process_config(self, config):
         # Process actual config
-        max_time, cfgs = self.coordinator.process_config(cfg_memory)
+        max_time, cfgs = self.coordinator.process_config(config)
         self.exec_time += max_time
         # Check returned configs
-        print("Obtained configs: [")
-        for config in cfgs:
-            print(hex(config))
-            self.checker.check_config(config)
-        print("]")
+        # print("Obtained configs: [")
+        for cfg in cfgs:
+            # print(hex(config))
+            self.checker.check_config(cfg)
+        # print("]")
 
     def launch_checking(self, init_cfg):
-        print("Checking config " + str(hex(init_cfg.raw_memory)))
-        self.checker.known[init_cfg.raw_memory] = 1
+        # print("Checking config " + str(hex(init_cfg.raw_memory)))
+        self.checker.known[init_cfg] = 1
         self.process_config(init_cfg)
+        alive = 0
         while not self.checker.last:
             new_config = self.checker.next_config()
-            print("Checking config " + str(hex(new_config)))
+            # print("Checking config " + str(hex(new_config)))
             self.process_config(new_config)
+            if alive % 1000 == 999:
+                print("{} configs encountered.".format(alive+1))
+            alive += 1
         return self.exec_time, self.checker.known
 
 if __name__ == "__main__":
@@ -53,6 +57,5 @@ if __name__ == "__main__":
         "../../sdvu/cfg/adding.6.out.1",
         "../../sdvu/cfg/adding.6.out.2"
     ]
-    simulator = Simulator(binaries)
-    cfg = Memory(128, 0x00000001)
-    print(simulator.launch_checking(cfg))
+    simulator = Simulator(binaries, 128)
+    print(simulator.launch_checking(0x1))
