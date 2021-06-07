@@ -92,8 +92,6 @@ class CLI:
             # Print and write results
             print("Model executed for {} cycles.".format(exec_time))
             print("{} configs encountered:".format(len(cfgs)))
-            for cfg in cfgs:
-                print(hex(cfg))
 
             model_name = self.args.source.split("/")[-1][:-5]
             # Model name, nb of cores, init config,nb of cycles, nb of cfgs

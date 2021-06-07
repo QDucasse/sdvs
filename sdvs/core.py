@@ -198,7 +198,7 @@ class Core:
         Change the decoder current instruction to the given one if the
         condition in rd is true
         """
-        if self.retrieve_register_value(self.current_instruction.rd) != 0:
+        if self.retrieve_register_value(self.current_instruction.rd) == 0:
             self.decoder.next_instruction_index = self.current_instruction.address
 
     def process_store(self):
@@ -249,7 +249,7 @@ class Core:
         Return the stored config memory.
         :return:
         """
-        self.new_configs.append(self.memory.raw_memory)
+        self.new_configs.append(self.memory.raw_memory) # or self.memory
         self.reset_cfg_memory()
 
     def process_nop(self):

@@ -10,7 +10,7 @@
 class Checker:
 
     def __init__(self):
-        self.known = {}
+        self.known = set()
         self.frontier = []
         self.last = False
 
@@ -18,7 +18,7 @@ class Checker:
         # Apply property
         # Successors already found?
         if not(config in self.known):
-            self.known[config] = 1
+            self.known.add(config)
             self.frontier.append(config)
 
     def next_config(self):

@@ -26,6 +26,7 @@ class Coordinator:
         for core in self.cores:
             core.reset_execution()
             core.setup_cfg_memory(Memory(self.cfg_size, config))
+            # core.setup_cfg_memory(config)
             core.process_instructions()
             new_configs += core.new_configs
             max_exec_time = max(core.executed_cycles, max_exec_time)
@@ -44,9 +45,9 @@ if __name__ == "__main__":
     decoder2 = Decoder(bin_instructions2)
     add_decoders = [decoder0, decoder1, decoder2]
     coordinator = Coordinator(add_decoders, 128)
-    max_time, cfgs = coordinator.process_config(0x00010001000000010000000100000001)
+    max_time, cfgs = coordinator.process_config(0x1)
 
     print(max_time)
-    print(cfgs)
+    print(list(map(hex, cfgs)))
 
 

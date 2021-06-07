@@ -737,15 +737,15 @@ class TestSimulator(unittest.TestCase):
     def testProcessJmpTrue(self):
         self.simulator.decoder.next_instruction_index = JMP_INDEX
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
-        self.simulator.registers[3].value = 1 # True
+        self.simulator.registers[3].value = 1  # True
         self.simulator.process_jmp()
-        self.assertEqual(8, self.simulator.decoder.next_instruction_index)
+        self.assertEqual(32, self.simulator.decoder.next_instruction_index)
 
     def testProcessOneInstructionJmpTrue(self):
         self.simulator.decoder.next_instruction_index = JMP_INDEX
         self.simulator.registers[3].value = 1  # True
         self.simulator.process_one_instruction()
-        self.assertEqual(8, self.simulator.decoder.next_instruction_index)
+        self.assertEqual(32, self.simulator.decoder.next_instruction_index)
 
     def testProcessJmpFalse(self):
         self.simulator.decoder.next_instruction_index = JMP_INDEX

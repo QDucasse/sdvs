@@ -81,3 +81,11 @@ class Memory:
         VAL_INT: set_int_at_address,
         VAL_STATE: set_state_at_address
     }
+
+    # def __hash__(self):
+    #     return hash(self.raw_memory)
+    #
+    # def __eq__(self, other):
+    #     if isinstance(other, Memory):
+    #         return (self.raw_memory == other.raw_memory) and (self.size == other.size)
+    #     return False

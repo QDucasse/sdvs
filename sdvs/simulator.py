@@ -17,6 +17,7 @@ from memory import Memory
 class Simulator:
 
     def __init__(self, bin_paths, cfg_size):
+        self.cfg_size = cfg_size
         decoders = []
         for binary in bin_paths:
             bin_instr = BinaryReader.read_instructions(binary)
@@ -28,26 +29,32 @@ class Simulator:
 
     def process_config(self, config):
         # Process actual config
-        max_time, cfgs = self.coordinator.process_config(config)
+        max_time, new_configs = self.coordinator.process_config(config)
         self.exec_time += max_time
         # Check returned configs
         # print("Obtained configs: [")
-        for cfg in cfgs:
+        for new_config in new_configs:
             # print(hex(config))
-            self.checker.check_config(cfg)
+            self.checker.check_config(new_config)
         # print("]")
 
     def launch_checking(self, init_cfg):
         # print("Checking config " + str(hex(init_cfg.raw_memory)))
-        self.checker.known[init_cfg] = 1
-        self.process_config(init_cfg)
+        # Memory
+        init_memory = init_cfg # Memory(self.cfg_size, init_cfg)
+        self.checker.known.add(init_memory)
+        self.process_config(init_memory)
         alive = 0
-        while not self.checker.last:
+        # while not self.checker.last:
+        while len(self.checker.frontier) != 0:
             new_config = self.checker.next_config()
             # print("Checking config " + str(hex(new_config)))
             self.process_config(new_config)
             if alive % 1000 == 999:
-                print("{} configs encountered.".format(alive+1))
+                print("{} configs checked.".format(alive+1))
+                print("Frontier filled with {} configurations".format(len(self.checker.frontier)))
+                print("Encountered {} configurations".format(len(self.checker.known)))
+                print("____________________________________________")
             alive += 1
         return self.exec_time, self.checker.known
 
