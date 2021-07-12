@@ -17,3 +17,5 @@ htmlcov/
 
 bin/
 !bin/README.md
+
+exec_stats.csv

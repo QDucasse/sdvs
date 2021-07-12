@@ -82,7 +82,8 @@ class CLI:
             # Compile file
             subprocess.run([self.args.compiler, "-c", self.args.source, "-o", "bin/a.out", "-n", self.args.ncores])
             # Setup simulator
-
+            import os
+            print(os.getcwd())
             binaries = ["bin/a.out." + str(i) for i in range(int(self.args.ncores))]
             with open(self.args.source[:-5]+".cfg", "r") as f:
                 init_cfg = f.readline().strip()

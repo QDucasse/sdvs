@@ -1,0 +1,24 @@
+state {start(0), end(1)} test_status.state = 0;
+byte a[6] = {0, 1, 2, 3, 4, 5};
+
+process arrayAccess
+    guardBlock
+        temp bool t_0 = a[0] == 0,
+        temp bool t_1 = a[1] == 1,
+        temp bool t_2 = t_0 and t_1,
+        temp bool t_3 = a[2] == 2,
+        temp bool t_4 = a[3] == 3,
+        temp bool t_5 = t_3 and t_4,
+        temp bool t_6 = a[4] == 4,
+        temp bool t_7 = a[5] == 5,
+        temp bool t_8 = t_6 and t_7,
+        temp bool t_9 = t_2 and t_5,
+        temp bool t_10 = t_8 and t_9;
+    guardCondition t_10;
+    effect
+        test_status.state = 1;
+
+
+
+
+

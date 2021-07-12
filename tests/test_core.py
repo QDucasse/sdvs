@@ -739,26 +739,26 @@ class TestSimulator(unittest.TestCase):
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.registers[3].value = 1  # True
         self.simulator.process_jmp()
-        self.assertEqual(32, self.simulator.decoder.next_instruction_index)
+        self.assertEqual(JMP_INDEX + 1, self.simulator.decoder.next_instruction_index)
 
     def testProcessOneInstructionJmpTrue(self):
         self.simulator.decoder.next_instruction_index = JMP_INDEX
         self.simulator.registers[3].value = 1  # True
         self.simulator.process_one_instruction()
-        self.assertEqual(32, self.simulator.decoder.next_instruction_index)
+        self.assertEqual(JMP_INDEX + 1, self.simulator.decoder.next_instruction_index)
 
     def testProcessJmpFalse(self):
         self.simulator.decoder.next_instruction_index = JMP_INDEX
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.registers[3].value = 0  # False
         self.simulator.process_jmp()
-        self.assertEqual(JMP_INDEX + 1, self.simulator.decoder.next_instruction_index)
+        self.assertEqual(32, self.simulator.decoder.next_instruction_index)
 
     def testProcessOneInstructionJmpFalse(self):
         self.simulator.decoder.next_instruction_index = JMP_INDEX
         self.simulator.registers[3].value = 0  # False
         self.simulator.process_one_instruction()
-        self.assertEqual(JMP_INDEX + 1, self.simulator.decoder.next_instruction_index)
+        self.assertEqual(32, self.simulator.decoder.next_instruction_index)
 
     # --------------
     # MOV OPERATIONS
