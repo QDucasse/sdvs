@@ -95,6 +95,13 @@ def setUpInstruction(op_code, cfg, data_type=VAL_BOOL):
 
 class TestSimulator(unittest.TestCase):
 
+    def setUpSimOnInstruction(self, instruction):
+        asm = ASM()
+        bit_instructions = [asm.process_line(instruction)]
+        decoder = Decoder(bit_instructions)
+        memory = Memory(0, 0)
+        self.simulator = Core(decoder, memory)
+
     @patch('builtins.open', mock_open(read_data=mock_file))
     def setUp(self):
         asm = ASM()
@@ -331,51 +338,51 @@ class TestSimulator(unittest.TestCase):
         self.simulator.registers[1].value = 1
         self.simulator.registers[2].value = 2
         self.simulator.process_div()
-        self.assertEqual(1 / 2, self.simulator.registers[3].value)
+        self.assertEqual(1 // 2, self.simulator.registers[3].value)
 
     def testProcessDivRI(self):
         self.simulator.decoder.next_instruction_index = DIV_INDEX + 1
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.registers[1].value = 1
         self.simulator.process_div()
-        self.assertEqual(1 / 122, self.simulator.registers[3].value)
+        self.assertEqual(1 // 122, self.simulator.registers[3].value)
 
     def testProcessDivIR(self):
         self.simulator.decoder.next_instruction_index = DIV_INDEX + 2
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.registers[2].value = 2
         self.simulator.process_div()
-        self.assertEqual(122 / 2, self.simulator.registers[3].value)
+        self.assertEqual(122 // 2, self.simulator.registers[3].value)
 
     def testProcessDivII(self):
         self.simulator.decoder.next_instruction_index = DIV_INDEX + 3
         self.simulator.current_instruction = self.simulator.decoder.decode_next()
         self.simulator.process_div()
-        self.assertEqual(123 / 124, self.simulator.registers[3].value)
+        self.assertEqual(123 // 124, self.simulator.registers[3].value)
 
     def testProcessOneInstructionDivRR(self):
         self.simulator.decoder.next_instruction_index = DIV_INDEX
         self.simulator.registers[1].value = 1
         self.simulator.registers[2].value = 2
         self.simulator.process_one_instruction()
-        self.assertEqual(1 / 2, self.simulator.registers[3].value)
+        self.assertEqual(1 // 2, self.simulator.registers[3].value)
 
     def testProcessOneInstructionDivRI(self):
         self.simulator.decoder.next_instruction_index = DIV_INDEX + 1
         self.simulator.registers[1].value = 1
         self.simulator.process_one_instruction()
-        self.assertEqual(1 / 122, self.simulator.registers[3].value)
+        self.assertEqual(1 // 122, self.simulator.registers[3].value)
 
     def testProcessOneInstructionDivIR(self):
         self.simulator.decoder.next_instruction_index = DIV_INDEX + 2
         self.simulator.registers[2].value = 2
         self.simulator.process_one_instruction()
-        self.assertEqual(122 / 2, self.simulator.registers[3].value)
+        self.assertEqual(122 // 2, self.simulator.registers[3].value)
 
     def testProcessOneInstructionDivII(self):
         self.simulator.decoder.next_instruction_index = DIV_INDEX + 3
         self.simulator.process_one_instruction()
-        self.assertEqual(123 / 124, self.simulator.registers[3].value)
+        self.assertEqual(123 // 124, self.simulator.registers[3].value)
 
     # --------------
     # MOD OPERATIONS
@@ -465,6 +472,34 @@ class TestSimulator(unittest.TestCase):
         self.simulator.process_and()
         self.assertEqual(1, self.simulator.registers[3].value)
 
+    def testProcessFalseAndRR(self):
+        self.setUpSimOnInstruction("and r3 r2 r1")
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.registers[1].value = 0
+        self.simulator.registers[2].value = 123
+        self.simulator.process_and()
+        self.assertEqual(0, self.simulator.registers[3].value)
+
+    def testProcessFalseAndRI(self):
+        self.setUpSimOnInstruction("and r3 r2 0")
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.registers[2].value = 123
+        self.simulator.process_and()
+        self.assertEqual(0, self.simulator.registers[3].value)
+
+    def testProcessFalseAndIR(self):
+        self.setUpSimOnInstruction("and r3 123 r1")
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.registers[1].value = 0
+        self.simulator.process_and()
+        self.assertEqual(0, self.simulator.registers[3].value)
+
+    def testProcessFalseAndII(self):
+        self.setUpSimOnInstruction("and r3 0 123")
+        self.simulator.current_instruction = self.simulator.decoder.decode_next()
+        self.simulator.process_and()
+        self.assertEqual(0, self.simulator.registers[3].value)
+
     def testProcessOneInstructionAndRR(self):
         self.simulator.decoder.next_instruction_index = AND_INDEX
         self.simulator.registers[1].value = 1
@@ -488,6 +523,31 @@ class TestSimulator(unittest.TestCase):
         self.simulator.decoder.next_instruction_index = AND_INDEX + 3
         self.simulator.process_one_instruction()
         self.assertEqual(1, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionFalseAndRR(self):
+        self.setUpSimOnInstruction("and r3 r2 r1")
+        self.simulator.registers[1].value = 0
+        self.simulator.registers[2].value = 123
+        self.simulator.process_one_instruction()
+        self.assertEqual(0, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionFalseAndRI(self):
+        self.setUpSimOnInstruction("and r3 r2 0")
+        self.simulator.registers[2].value = 123
+        self.simulator.process_one_instruction()
+        self.assertEqual(0, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionFalseAndIR(self):
+        self.setUpSimOnInstruction("and r3 123 r1")
+        self.simulator.registers[1].value = 0
+        self.simulator.process_one_instruction()
+        self.assertEqual(0, self.simulator.registers[3].value)
+
+    def testProcessOneInstructionFalseAndII(self):
+        self.setUpSimOnInstruction("and r3 0 123")
+        self.simulator.process_one_instruction()
+        self.assertEqual(0, self.simulator.registers[3].value)
+
 
     # --------------
     # OR OPERATIONS

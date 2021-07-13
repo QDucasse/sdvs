@@ -129,7 +129,7 @@ class Core:
         """
         left_operand, right_operand = self.process_binary_operands()
         self.assign_register_value(self.current_instruction.rd,
-                                   left_operand / right_operand)
+                                   left_operand // right_operand)
 
     def process_mod(self):
         """
