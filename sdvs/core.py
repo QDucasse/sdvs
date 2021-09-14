@@ -6,7 +6,7 @@
 # ===========================================
 # Simulator: Process instructions one by one and show the results of their execution
 
-from constants import *
+from sdvs.constants import *
 import copy
 
 def bool_to_int(boolean):

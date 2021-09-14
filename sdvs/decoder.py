@@ -6,8 +6,8 @@
 # ===========================================
 # Decoder: Process 32-bits instruction into their corresponding instruction object.
 
-from constants import *
-from instruction import Instruction
+from sdvs.constants import *
+from sdvs.instruction import Instruction
 
 
 class Decoder:
@@ -95,4 +95,3 @@ if __name__ == "__main__":
     print(bin_instructions)
     decoder = Decoder(bin_instructions)
     print(decoder.decode_next())
-

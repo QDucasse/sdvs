@@ -6,7 +6,7 @@
 # ===========================================
 # Instruction: Holder of the instructions information
 
-from constants import *
+from sdvs.constants import *
 
 class Instruction:
     """

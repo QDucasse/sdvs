@@ -9,8 +9,8 @@
 import unittest
 from unittest.mock import patch, mock_open
 
-from asm import *
-from constants import *
+from sdvs.asm import *
+from sdvs.constants import *
 
 mock_file = """
 add r3 r1 r2
@@ -37,7 +37,7 @@ storeint r3 r1
 storeint r3 234
 storestate r3 r1
 storestate r3 234
-nop 
+nop
 endga
 """
 

@@ -9,7 +9,7 @@
 import argparse
 import subprocess
 import sys
-from simulator import Simulator
+from sdvs.simulator import Simulator
 
 
 class Parser(argparse.ArgumentParser):
@@ -113,9 +113,3 @@ class CLI:
             with open(self.args.outputfile, "a") as csv_file:
                 writer = csv.writer(csv_file)
                 writer.writerow(fields)
-
-
-
-
-
-

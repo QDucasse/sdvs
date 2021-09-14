@@ -6,9 +6,9 @@
 # ===========================================
 # Coordinator: Coordination between the different cores of the system.
 
-from constants import *
-from core import Core
-from memory import Memory
+from sdvs.constants import *
+from sdvs.core import Core
+from sdvs.memory import Memory
 
 
 class Coordinator:
@@ -49,5 +49,3 @@ if __name__ == "__main__":
 
     print(max_time)
     print(list(map(hex, cfgs)))
-
-

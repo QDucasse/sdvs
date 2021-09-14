@@ -6,12 +6,12 @@
 # ===========================================
 # Simulator: Links all elements apart from CLI and GUI.
 
-from binary_reader import BinaryReader
-from checker import Checker
-from coordinator import Coordinator
-from core import Core
-from decoder import Decoder
-from memory import Memory
+from sdvs.binary_reader import BinaryReader
+from sdvs.checker import Checker
+from sdvs.coordinator import Coordinator
+from sdvs.core import Core
+from sdvs.decoder import Decoder
+from sdvs.memory import Memory
 
 
 class Simulator:

@@ -6,7 +6,7 @@
 # ===========================================
 # Memory: Holds the configuration and knows how to access the elements providing an address
 
-from constants import *
+from sdvs.constants import *
 
 
 def gen_bin_number_ones(width):

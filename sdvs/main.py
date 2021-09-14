@@ -7,7 +7,7 @@
 # SDVS: SDVE binary execution simulator
 
 import sys
-from cli import CLI
+from sdvs.cli import CLI
 
 if __name__ == "__main__":
     cli = CLI(sys.argv[1:])

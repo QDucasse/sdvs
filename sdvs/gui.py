@@ -9,11 +9,11 @@ import os
 import tkinter as tk
 from tkinter import ttk
 
-from binary_reader import BinaryReader
-from constants import *
-from decoder import Decoder
-from memory import Memory
-from core import Core
+from sdvs.binary_reader import BinaryReader
+from sdvs.constants import *
+from sdvs.decoder import Decoder
+from sdvs.memory import Memory
+from sdvs.core import Core
 
 
 class GUI:
