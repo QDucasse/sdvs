@@ -8,8 +8,7 @@
 
 import argparse
 import subprocess
-
-from memory import Memory
+import sys
 from simulator import Simulator
 
 
@@ -38,6 +37,14 @@ class Parser(argparse.ArgumentParser):
         """
         return self.parse_args(args)
 
+    def error(self, message):
+        """
+        Triggers the help message if incorrect options are passed.
+        :param message: error message
+        """
+        sys.stderr.write('error: %s\n' % message)
+        self.print_help()
+        sys.exit(2)
 
 class ObjDict(dict):
     """
@@ -66,10 +73,14 @@ class CLI:
     """
 
     def __init__(self, command_line_args):
-        # Parse the command line arguments
+        # Initialize parser
         self.parser = Parser()
+        # Check for command line arguments
+        if len(command_line_args) == 0:
+            self.parser.print_help(sys.stderr)
+            sys.exit(1)
+        # Parse the command line arguments
         args = self.parser.parse(command_line_args)
-
         self.args = ObjDict(args.__dict__)
 
     def main(self):
